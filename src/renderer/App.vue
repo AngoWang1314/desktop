@@ -6,9 +6,9 @@
 </template>
 
 <style>
-  @import url('~/node_modules/purecss/build/pure.css');
-  @import url('~/node_modules/element-ui/lib/theme-chalk/index.css');
-  @import url('//at.alicdn.com/t/font_919985_4cs5v36rbm6.css');
+  @import '~purecss/build/pure.css';
+  @import '~element-ui/lib/theme-chalk/index.css';
+  @import 'https://at.alicdn.com/t/font_919985_4cs5v36rbm6.css';
 
   body {
     position: relative;

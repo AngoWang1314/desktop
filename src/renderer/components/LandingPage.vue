@@ -1,9 +1,9 @@
 <template>
   <div id="wrapper">
-    {{ msg }}<br />
+    <!--{{ msg }}<br />
     {{ num }}<br />
     {{ tenNum }}<br />
-    <button @click="increase({'num': 1})">异步增加</button><br />
+    <button @click="increase({'num': 1})">异步增加</button><br />-->
     <SystemInformation></SystemInformation>
   </div>
 </template>
@@ -24,21 +24,16 @@
       }
     },
     computed: {
-      ...mapState('Counter', [
+      ...mapState('Landing', [
         'num'
       ]),
-      ...mapGetters('Counter', [
+      ...mapGetters('Landing', [
         'tenNum'
       ])
     },
     methods: {
-      open () {
-        this.$electron.shell.openExternal('https://www.baidu.com')
-      },
       increase (payload) {
-        console.log(this.$store)
-        // this.$store.commit('Counter/INCREASE', payload)
-        this.$store.dispatch('Counter/increase', payload).then(function (data) {
+        this.$store.dispatch('Landing/increase', payload).then(function (data) {
           console.log(data)
         }, function (data) {
           console.log(data)

@@ -9,6 +9,11 @@ export default new Router({
       path: '/',
       name: 'login-page',
       component: require('@/components/LoginPage').default
+    },
+    {
+      path: '/landing',
+      name: 'landing-page',
+      component: require('@/components/LandingPage').default
     }
   ]
 })

@@ -82,14 +82,6 @@
       ])
     },
     methods: {
-      increase (payload) {
-        // this.$store.commit('Login/INCREASE', payload)
-        this.$store.dispatch('Login/increase', payload).then(function (data) {
-          console.log(data)
-        }, function (data) {
-          console.log(data)
-        })
-      },
       updateAccount (e) {
         this.$store.commit('Login/updateAccount', {'account': e.target.value})
       },
@@ -99,7 +91,7 @@
       doLogin (e) {
         if (this.account === '15920334885' && this.password === '334885') {
           ipcRenderer.send('finish-login')
-          this.$router.push('/main')
+          this.$router.push('/landing')
         } else {
           Message({message: '账号或密码错误！', center: true})
         }
