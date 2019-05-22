@@ -31,8 +31,10 @@
       margin-left: 74px;
       text-align: right;
       .minimize, .maximize-restore, .close {
+        position: relative;
+        z-index: 10000;
         width: 42px;
-        height: 42px;
+        height: 43px;
         text-align: center;
         cursor: pointer;
         -webkit-app-region: no-drag;

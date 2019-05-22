@@ -1,43 +1,67 @@
 <template>
-  <div id="wrapper">
-    <!--{{ msg }}<br />
-    {{ num }}<br />
-    {{ tenNum }}<br />
-    <button @click="increase({'num': 1})">异步增加</button><br />-->
-    <SystemInformation></SystemInformation>
+  <div class="c-landing-page">
+    <div class="sidebar">
+      <div :class="{'item': true, 'active': selectedIndex == 0}" @click="activeItem(0, '/vdo')">推荐视频</div>
+      <div :class="{'item': true, 'active': selectedIndex == 1}" @click="activeItem(1, '/paper')">试卷试题</div>
+      <div :class="{'item': true, 'active': selectedIndex == 2}" @click="activeItem(2, '/ask')">提问解答</div>
+      <div :class="{'item': true, 'active': selectedIndex == 3}" @click="activeItem(3, '/my')">个人信息</div>
+    </div>
+    <div class="content">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="less">
+  .c-landing-page {
+    height: calc(100vh - 42px);
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    .sidebar {
+      width: 85px;
+      height: 100%;
+      background-color: #409eff;
+      display: flex;
+      flex-direction: column;
+      .item {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        color: #ffffff;
+        cursor: pointer;
+        border-top: 1px solid #3a98f9;
+        &:hover {
+          background-color: #097aef;
+        }
+      }
+      .active {
+        background-color: #097aef;
+      }
+    }
+    .content {
+      flex: 1;
+      height: 100%;
+      overflow: hidden;
+      border-top: 1px solid #3a98f9;
+    }
+  }
 </style>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
-  import SystemInformation from './LandingPage/SystemInformation'
-
   export default {
     name: 'landing-page',
-    components: { SystemInformation },
     data () {
       return {
-        msg: 'Hellow World!'
+        selectedIndex: 0
       }
     },
-    computed: {
-      ...mapState('Landing', [
-        'num'
-      ]),
-      ...mapGetters('Landing', [
-        'tenNum'
-      ])
-    },
     methods: {
-      increase (payload) {
-        this.$store.dispatch('Landing/increase', payload).then(function (data) {
-          console.log(data)
-        }, function (data) {
-          console.log(data)
-        })
+      activeItem (index, path) {
+        this.selectedIndex = index
+        this.$router.push(path)
       }
     }
   }

@@ -8,7 +8,7 @@
         <label>账号：</label><input type="text" placeholder="请输入账号" autoFocus :value="account" @input="updateAccount" />
       </div>
       <div class="password">
-        <label>密码：</label><input type="password" placeholder="请输入密码" :value="password" @input="updatePassword" />
+        <label>密码：</label><input type="password" placeholder="请输入密码" :value="password" @input="updatePassword" @keypress="MydoLogin" />
       </div>
       <div class="tc btn-container">
         <button class="pure-button pure-button-primary" @click="doLogin">登陆</button>
@@ -20,7 +20,8 @@
 <style scoped lang="less">
   .c-login-page {
     .avatar {
-      margin: 30px auto;
+      padding: 30px 0;
+      border-top: 1px solid #409eff;
       img {
         width: 100px;
         height: 100px;
@@ -88,13 +89,28 @@
       updatePassword (e) {
         this.$store.commit('Login/updatePassword', {'password': e.target.value})
       },
-      doLogin (e) {
-        if (this.account === '15920334885' && this.password === '334885') {
-          ipcRenderer.send('finish-login')
-          this.$router.push('/landing')
-        } else {
-          Message({message: '账号或密码错误！', center: true})
+      MydoLogin (e) {
+        if (e.keyCode === 13) {
+          this.doLogin()
         }
+      },
+      doLogin () {
+        const vm = this
+
+        vm.$http.post('/api/common/doLogin', {
+          username: vm.account,
+          password: vm.password
+        }).then(function (ret) {
+          if (ret.data.ok === 0) {
+            localStorage.setItem('token', ret.data.data.token)
+            ipcRenderer.send('finish-login')
+            vm.$router.push('/vdo')
+          } else {
+            Message({message: ret.data.msg, center: true})
+          }
+        }, function (ret) {
+          Message({message: ret.data.msg, center: true})
+        })
       }
     }
   }

@@ -10,9 +10,15 @@
   @import '~element-ui/lib/theme-chalk/index.css';
   @import 'https://at.alicdn.com/t/font_919985_4cs5v36rbm6.css';
 
+  html {
+    height: 100vh;
+    overflow: hidden;
+  }
+
   body {
-    position: relative;
     font-family: 'Microsoft Yahei';
+    position: relative;
+    height: 100vh;
   }
 
   * {
@@ -21,11 +27,6 @@
     box-sizing: border-box;
     user-select: none;
     -webkit-user-select: none;
-  }
-
-  #app {
-    width: 100vw;
-    height: 100vh;
   }
 
   .ib {
@@ -50,6 +51,24 @@
 
   .tr {
     text-align: right;
+  }
+
+  .c-app {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+    background-color: #F5F5F5;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+    background: rgba(157,172,187,0.6);
+  }
+  ::-webkit-scrollbar-track {
+    background-color: #e2e2e2;
   }
 </style>
 
