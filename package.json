@@ -22,7 +22,13 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "xbbj",
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "runAfterFinish": true
+    },
+    "productName": "学霸笔迹",
     "appId": "com.xbbj.app",
     "directories": {
       "output": "build"
@@ -53,12 +59,19 @@
     },
     "linux": {
       "icon": "build/icons"
-    }
+    },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://192.168.0.48/"
+      }
+    ]
   },
   "dependencies": {
     "axios": "^0.18.0",
     "dplayer": "^1.25.0",
     "element-ui": "^2.4.9",
+    "electron-updater": "4.0.0",
     "hls.js": "^0.12.4",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
@@ -88,7 +101,8 @@
     "css-loader": "^0.28.11",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "^2.0.4",
+    "electron": "^2.0.16",
+    "electron-builder": "^20.34.0",
     "electron-debug": "^1.5.0",
     "electron-devtools-installer": "^2.2.4",
     "eslint": "^4.19.1",

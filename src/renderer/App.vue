@@ -73,11 +73,22 @@
 </style>
 
 <script>
+  import { ipcRenderer } from 'electron'
   import TitleBar from '@/components/TitleBar'
+
   export default {
     name: 'app',
     components: {
       TitleBar
+    },
+    mounted () {
+      ipcRenderer.on('message', (event, {message, data}) => {
+        if (message === 'isUpdateNow') {
+          if (confirm('是否现在更新？')) {
+            ipcRenderer.send('updateNow')
+          }
+        }
+      })
     }
   }
 </script>

@@ -5,6 +5,12 @@ import path from 'path'
 
 // import store from "../renderer/store"
 
+// 自动更新模块
+import { autoUpdater } from 'electron-updater'
+
+// 更新包的位置
+const feedUrl = `http://192.168.0.48/win32`
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -13,12 +19,12 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
-let mainWindow
+let mainWindow, webContents
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-app.commandLine.appendSwitch('ppapi-flash-path', app.getPath('pepperFlashSystemPlugin'))
+app.commandLine.appendSwitch('ppapi-flash-path', path.join(__dirname, 'static/pepflashplayer64_28_0_0_126.dll'))
 
 function createWindow () {
   /**
@@ -35,6 +41,8 @@ function createWindow () {
   })
 
   mainWindow.loadURL(winURL)
+
+  webContents = mainWindow.webContents
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -98,6 +106,57 @@ function createWindow () {
     })
   })
 }
+
+// 主进程主动发送消息给渲染进程函数
+function sendUpdateMessage (message, data) {
+  setTimeout(function () {
+    webContents.send('message', { message, data })
+  }, 1000)
+}
+
+let checkForUpdates = () => {
+  // 设置当前版本
+  autoUpdater.currentVersion = '0.0.1'
+  autoUpdater.updateConfigPath = './resources/app-update.yml'
+
+  // 配置安装包远端服务器
+  autoUpdater.setFeedURL(feedUrl)
+
+  // 下面是自动更新的整个生命周期所发生的事件
+  autoUpdater.on('error', function (message) {
+    sendUpdateMessage('error', message)
+  })
+
+  autoUpdater.on('checking-for-update', function (message) {
+    sendUpdateMessage('checking-for-update', message)
+  })
+
+  autoUpdater.on('update-available', function (message) {
+    sendUpdateMessage('update-available', message)
+  })
+
+  autoUpdater.on('update-not-available', function (message) {
+    sendUpdateMessage('update-not-available', message)
+  })
+
+  // 更新下载进度事件
+  autoUpdater.on('download-progress', function (progressObj) {
+    sendUpdateMessage('downloadProgress', progressObj)
+  })
+
+  // 更新下载完成事件
+  autoUpdater.on('update-downloaded', function (event, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) {
+    sendUpdateMessage('isUpdateNow')
+    ipcMain.on('updateNow', (e, arg) => {
+      autoUpdater.quitAndInstall()
+    })
+  })
+
+  // 执行自动更新检查
+  autoUpdater.checkForUpdates()
+}
+
+checkForUpdates()
 
 app.on('ready', createWindow)
 
