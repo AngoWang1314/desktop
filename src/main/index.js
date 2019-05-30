@@ -31,6 +31,7 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
+    title: '学霸笔迹',
     useContentSize: true,
     frame: false,
     width: 300,
@@ -91,6 +92,7 @@ function createWindow () {
 
   ipcMain.on('open-window', (event, arg) => {
     let child = new BrowserWindow({
+      title: '学霸笔迹',
       parent: mainWindow,
       modal: true,
       show: false,
