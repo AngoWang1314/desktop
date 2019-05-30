@@ -78,14 +78,20 @@
 
   export default {
     name: 'app',
+    data () {
+      document.title = '学霸笔记'
+      return {
+        times: 0
+      }
+    },
     components: {
       TitleBar
     },
     mounted () {
       ipcRenderer.on('message', (event, {message, data}) => {
-        if (message === 'isUpdateNow') {
-          if (confirm('是否现在更新？')) {
-            ipcRenderer.send('updateNow')
+        if (message === 'is-update-now') {
+          if (confirm('发现新版本，立即更新？')) {
+            ipcRenderer.send('update-now')
           }
         }
       })

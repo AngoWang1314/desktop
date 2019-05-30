@@ -2,7 +2,7 @@
   "name": "xbbj",
   "version": "0.0.1",
   "author": "AngoWang1314 <AngoWang1314@gmail.com>",
-  "description": "An electron-vue project",
+  "description": "学霸笔迹",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -22,11 +22,18 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
+    "extraResources": [{
+      "from": "static/pepflashplayer64_28_0_0_126.dll",
+      "to": "pepflashplayer64_28_0_0_126.dll"
+    }],
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "runAfterFinish": true
+      "runAfterFinish": true,
+      "perMachine": false,
+      "shortcutName": "学霸笔迹",
+      "artifactName": "xbbj Setup ${version}.${ext}"
     },
     "productName": "学霸笔迹",
     "appId": "com.xbbj.app",
@@ -63,7 +70,7 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "http://192.168.0.48/"
+        "url": "http://www.xuebabiji.club/"
       }
     ]
   },

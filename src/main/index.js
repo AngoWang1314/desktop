@@ -9,7 +9,7 @@ import path from 'path'
 import { autoUpdater } from 'electron-updater'
 
 // 更新包的位置
-const feedUrl = `http://192.168.0.48/win32`
+const feedUrl = `http://www.xuebabiji.club/exe/xbbj`
 
 /**
  * Set `__static` path to static files in production
@@ -24,7 +24,7 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-app.commandLine.appendSwitch('ppapi-flash-path', path.join(__dirname, 'static/pepflashplayer64_28_0_0_126.dll'))
+app.commandLine.appendSwitch('ppapi-flash-path', process.env.NODE_ENV === 'development' ? app.getPath('pepperFlashSystemPlugin') : (process.arch === 'x64' ? `${__dirname}/../../../pepflashplayer64_28_0_0_126.dll` : ''))
 
 function createWindow () {
   /**
@@ -36,7 +36,7 @@ function createWindow () {
     width: 300,
     height: 440,
     resizable: false,
-    webPreferences: {plugins: true},
+    webPreferences: {plugins: true, allowDisplayingInsecureContent: true, allowRunningInsecureContent: true},
     center: true
   })
 
@@ -98,7 +98,7 @@ function createWindow () {
       width: 1120,
       height: 480,
       resizable: false,
-      webPreferences: {plugins: true}
+      webPreferences: {plugins: true, allowDisplayingInsecureContent: true, allowRunningInsecureContent: true}
     })
     child.loadURL(arg)
     child.once('ready-to-show', () => {
@@ -146,8 +146,8 @@ let checkForUpdates = () => {
 
   // 更新下载完成事件
   autoUpdater.on('update-downloaded', function (event, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) {
-    sendUpdateMessage('isUpdateNow')
-    ipcMain.on('updateNow', (e, arg) => {
+    sendUpdateMessage('is-update-now')
+    ipcMain.on('update-now', (e, arg) => {
       autoUpdater.quitAndInstall()
     })
   })
@@ -156,7 +156,9 @@ let checkForUpdates = () => {
   autoUpdater.checkForUpdates()
 }
 
-checkForUpdates()
+if (process.env.NODE_ENV !== 'development') {
+  checkForUpdates()
+}
 
 app.on('ready', createWindow)
 
