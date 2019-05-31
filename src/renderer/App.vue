@@ -73,12 +73,14 @@
 </style>
 
 <script>
-  import { ipcRenderer } from 'electron'
+  import { ipcRenderer, webFrame } from 'electron'
   import TitleBar from '@/components/TitleBar'
 
   export default {
     name: 'app',
     data () {
+      webFrame.setZoomFactor(1.0)
+      webFrame.setZoomLevel(0)
       return {
         times: 0
       }

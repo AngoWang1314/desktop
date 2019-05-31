@@ -23,8 +23,8 @@
   },
   "build": {
     "extraResources": [{
-      "from": "static/pepflashplayer64_28_0_0_126.dll",
-      "to": "pepflashplayer64_28_0_0_126.dll"
+      "from": "dll/pepflashplayer64_28_0_0_126.dll",
+      "to": "dll/pepflashplayer64_28_0_0_126.dll"
     }],
     "nsis": {
       "oneClick": false,
@@ -33,7 +33,7 @@
       "runAfterFinish": true,
       "perMachine": false,
       "shortcutName": "学霸笔迹",
-      "artifactName": "xbbj Setup ${version}.${ext}"
+      "artifactName": "xbbj_Setup.${ext}"
     },
     "productName": "学霸笔迹",
     "appId": "com.xbbj.app",
