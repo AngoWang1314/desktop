@@ -8,7 +8,7 @@
         <label>账号：</label><input type="text" placeholder="请输入账号" autoFocus :value="account" @input="updateAccount" />
       </div>
       <div class="password">
-        <label>密码：</label><input type="password" placeholder="请输入密码" :value="password" @input="updatePassword" @keypress="MydoLogin" />
+        <label>密码：</label><input type="password" placeholder="请输入密码" :value="password" @input="updatePassword" @keypress="myDoLogin" />
       </div>
       <div class="tc btn-container">
         <button class="pure-button pure-button-primary" @click="doLogin">登陆</button>
@@ -89,7 +89,7 @@
       updatePassword (e) {
         this.$store.commit('Login/updatePassword', {'password': e.target.value})
       },
-      MydoLogin (e) {
+      myDoLogin (e) {
         if (e.keyCode === 13) {
           this.doLogin()
         }

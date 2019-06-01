@@ -23,6 +23,9 @@
   },
   "build": {
     "extraResources": [{
+      "from": "dll/pepflashplayer32_32_0_0_192.dll",
+      "to": "dll/pepflashplayer32_32_0_0_192.dll"
+    }, {
       "from": "dll/pepflashplayer64_28_0_0_126.dll",
       "to": "dll/pepflashplayer64_28_0_0_126.dll"
     }],

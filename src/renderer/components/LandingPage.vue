@@ -33,12 +33,14 @@
         color: #ffffff;
         cursor: pointer;
         border-top: 1px solid #3a98f9;
+        border-bottom: 1px solid #3a98f9;
         &:hover {
-          border-top: 1px solid #097aef;
+          border: 1px solid #097aef;
           background-color: #097aef;
         }
       }
       .active {
+        border: 1px solid #097aef;
         background-color: #097aef;
       }
     }

@@ -89,7 +89,7 @@
       TitleBar
     },
     mounted () {
-      function confirm (info, callback) {
+      function confirm (tip, callback) {
         var div = document.createElement('div')
         div.innerHTML = '<style type="text/css">' +
           '.nbaMask { position: fixed; z-index: 100000; top: 0; right: 0; left: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); }' +
@@ -125,7 +125,7 @@
         dialog.style.display = 'block'
 
         var msg = document.getElementById('msg')
-        msg.innerHTML = info
+        msg.innerHTML = tip
 
         var ok = document.getElementById('ok')
         ok.onclick = function () {

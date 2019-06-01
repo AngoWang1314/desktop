@@ -9,7 +9,7 @@ import path from 'path'
 import { autoUpdater } from 'electron-updater'
 
 // 更新包的位置
-const feedUrl = `http://www.xuebabiji.club/exe/xbbj`
+const feedUrl = `http://www.xuebabiji.club/${process.platform}/xbbj/${process.arch}`
 
 /**
  * Set `__static` path to static files in production
@@ -23,8 +23,8 @@ let mainWindow, webContents
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
-
-app.commandLine.appendSwitch('ppapi-flash-path', process.env.NODE_ENV === 'development' ? app.getPath('pepperFlashSystemPlugin') : (process.arch === 'x64' ? `${__dirname}/../../../pepflashplayer64_28_0_0_126.dll` : ''))
+console.log(feedUrl)
+app.commandLine.appendSwitch('ppapi-flash-path', process.env.NODE_ENV === 'development' ? app.getPath('pepperFlashSystemPlugin') : (process.arch === 'x64' ? `${__dirname}/../../../pepflashplayer64_28_0_0_126.dll` : `${__dirname}/../../../pepflashplayer32_32_0_0_192.dll`))
 
 function createWindow () {
   /**

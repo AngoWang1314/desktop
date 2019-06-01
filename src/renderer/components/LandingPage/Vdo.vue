@@ -49,7 +49,7 @@
       <div class="row">
         <label>搜索：</label>
         <div class="list">
-          <input type="text" placeholder="请输入视频名称搜索" v-model="keyword"><button class="pure-button pure-button-primary" @click="doSearch">搜索</button>
+          <input type="text" placeholder="请输入视频名称搜索" v-model="keyword" @keypress="myDoSearch"><button class="pure-button pure-button-primary" @click="doSearch">搜索</button>
         </div>
       </div>
     </div>
@@ -68,12 +68,12 @@
         <span @click="next">下一页</span>
       </div>
     </div>
-    <div class="layer" v-if="is_playing">
+    <!-- <div class="layer" v-if="is_playing">
     </div>
     <div class="iframe-container" v-if="is_playing">
       <iframe allowfullscreen="allowfullscreen" :src="iframe_src"></iframe>
       <img class="close" @click="stop" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEl0lEQVRYR7VXXWgcVRT+zsxuxA22DXEzc+8QNWoU/Esp1AgtgoVqSiUvWoWm+GCFVn0QfzBY9Ukt/lUEayuign9otX0R2yKKvthCpVRj0BqoNRrmzsxuY0JqqCYzc+SGmbBuN7sTkwzMy9xzzvfN+bvnEDI+IyMjF5qmuYGZ7wbQSUStzGwBiAGMAjhDRCcBHBBCHCSiv7OYpkZCnucVmXkngM3MPGgYxrsAjjNzSQgR+L5/EYBr9BvH8Woi0iSXE9GHRLRDCFGuhzEnAWbOKaUeBdBPRJ/kcrmX29raTjUirM99378+iqKniGgjMz8jpXyFiKZr6dYkMD4+3jI5Ofk5EQ3n8/nHisWilwW4WsZ13TVE9JYOT6FQ6F2xYsVYtcx5BIIguDwMw8MAdjuO89r/Aa7U8X2/OY7j9wCsNE3zVsuyfq08/w8BpdTFAI4x8zbHcb5aKHilvlLqWQB9AFZLKc+kZ7MEkiz/FsD7UspXFxM8teW67sdEdEUURTe3t7ef099nCXie9zwzd0op71gKcG2TmS9QSn1HRIeklE/MEvB9vy2KoqGmpqZri8WiWioC2q5SahUzH8nlcpdZlhXMeEAptRfAn1LKJ5cSvCIU+4hoTEq5nZi5yfO8sXw+31nv70dHR5eFYdhhWdZAPZJBEHQx8ynbtifnktMyURQdFUIsI6XUbcz8ouM4XfUMK6UuATBIRFuFEPtryXqed2ccx28ahrFKCDHcwN5vALaT67q7iWhCSrmjkft93++O4/gLIrqvmoQGZ2bddNZJKU80suW67ksACtoD3xDRHiHEp42UkjarSXzJzFscx/lMf3Ndt5eIPjAMY71t28ey2PE87y5mvl8TOGma5lbLso5mUUySdi0A3S03JTqa/AYppe4jmZ60TWsC40S0slHMqq36vr8ujmN9X8RE1Gvb9teZkBMh3/c74jj+XhM4axjGDbZt66TI/KQEknmgZz5/r0H0nRNF0YBOwiEA9zqOcyQrulKqOgT7AGycDwkdAgDvpEn4+lylVcP1i5WEm5j5Ae2BPQD+chzn8UYeyFCGbwO4JUsZJnfPcu2BHgB7pZQd9QgkSfNDvUaklOpjZt1XuqSUf9Sz57ruABH1z7RiXQmmaXbbtj04l5IeLIjoykatuFQq6cHjdGtr68RctpK543chREt6Gb0BoFVKmdZ1o2gs6Dxxf4uUctsMgSAIrDAMh4loTZb4LQS9XC7Lqampn0zTvNq27dLsQKKU2snMupRuJKJ/FgJST1cpdQDAUHr31BrJ9OHmpSCglHoYwJYoitaeN5IlPV4PpceTufDpxSThuu56ItK51l1zKE3BknLTff2EYRj31BssshL0PO/BOI4fyuVyPZZlna7Uq7uYANAemVebrjReLpfF9PT0Lma+tLm5+fZMi0lqQK9mnuf1A9DT6yHTNJ9r1ANS3VKp1BmG4SN6kSWiXUKIF4gorOWxzMspM/cR0VlmPmgYhs6TnwuFwo8TExPnTNNsA6CX2Jt0khHRdQA+WtByWs02WVx6kvX8Kr2eJyHS8366nv8CYH+ynmcq5X8BhQlZ/CI+V64AAAAASUVORK5CYII=">
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -217,7 +217,7 @@
         page: 1,
         list: [],
         total: 0,
-        our_base_url: 'http://www.xuebabiji.club/player/index.html?item=',
+        our_base_url: 'http://www.xuebabiji.club/player/desktop.html?item=',
         is_playing: false,
         iframe_src: ''
       }
@@ -229,6 +229,11 @@
       changeItem (key, value) {
         this[key] = value
         this.doSearch()
+      },
+      myDoSearch (e) {
+        if (e.keyCode === 13) {
+          this.doSearch()
+        }
       },
       doSearch () {
         const vm = this
