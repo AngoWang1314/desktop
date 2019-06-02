@@ -8,7 +8,7 @@
 <style>
   @import '~purecss/build/pure.css';
   @import '~element-ui/lib/theme-chalk/index.css';
-  @import 'https://at.alicdn.com/t/font_919985_4cs5v36rbm6.css';
+  @import 'https://at.alicdn.com/t/font_919985_do7c4ug0m5.css';
 
   html {
     height: 100vh;
@@ -58,6 +58,10 @@
     height: 100vh;
   }
 
+  img {
+    vertical-align: middle;
+  }
+
   ::-webkit-scrollbar {
     width: 12px;
     height: 12px;
@@ -75,18 +79,31 @@
 <script>
   import { ipcRenderer, webFrame } from 'electron'
   import TitleBar from '@/components/TitleBar'
+  import { Message } from 'element-ui'
 
   export default {
     name: 'app',
+    components: {
+      TitleBar
+    },
     data () {
       webFrame.setZoomFactor(1.0)
       webFrame.setZoomLevel(0)
       return {
-        times: 0
       }
     },
-    components: {
-      TitleBar
+    created () {
+      const vm = this
+
+      vm.$http.get('/api/common/getIndex').then(function (ret) {
+        if (ret.data.ok === 0) {
+          vm.$store.commit('App/updateIndexes', {'indexes': ret.data.data.indexes})
+        } else {
+          Message({message: ret.data.msg, center: true})
+        }
+      }, function (ret) {
+        Message({message: ret.data.msg, center: true})
+      })
     },
     mounted () {
       function confirm (tip, callback) {

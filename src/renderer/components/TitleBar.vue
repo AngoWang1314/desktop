@@ -38,7 +38,6 @@
         text-align: center;
         cursor: pointer;
         -webkit-app-region: no-drag;
-        
       }
       .minimize, .maximize-restore {
         &:hover {

@@ -2,7 +2,7 @@
   "name": "xbbj",
   "version": "0.0.1",
   "author": "AngoWang1314 <AngoWang1314@gmail.com>",
-  "description": "学霸笔迹",
+  "description": "一个免费提供推荐视频、试卷试题、提问解答等资源的应用",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {

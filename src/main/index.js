@@ -1,35 +1,25 @@
 'use strict'
 
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
-import path from 'path'
-
-// import store from "../renderer/store"
-
-// 自动更新模块
 import { autoUpdater } from 'electron-updater'
+import path from 'path'
+// import store from "../renderer/store"
 
 // 更新包的位置
 const feedUrl = `http://www.xuebabiji.club/${process.platform}/xbbj/${process.arch}`
 
-/**
- * Set `__static` path to static files in production
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
- */
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
 let mainWindow, webContents
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
-console.log(feedUrl)
+const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
+
+// 加载flash的dll
 app.commandLine.appendSwitch('ppapi-flash-path', process.env.NODE_ENV === 'development' ? app.getPath('pepperFlashSystemPlugin') : (process.arch === 'x64' ? `${__dirname}/../../../pepflashplayer64_28_0_0_126.dll` : `${__dirname}/../../../pepflashplayer32_32_0_0_192.dll`))
 
 function createWindow () {
-  /**
-   * Initial window options
-   */
+  // 新建窗口
   mainWindow = new BrowserWindow({
     title: '学霸笔迹',
     useContentSize: true,
@@ -41,17 +31,15 @@ function createWindow () {
     center: true
   })
 
+  // 加载网页
   mainWindow.loadURL(winURL)
 
+  // 网页指针
   webContents = mainWindow.webContents
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
-
-  /* setInterval(() => {
-    store.dispatch('Counter/increase')
-  }, 3000) */
 
   ipcMain.on('min-window', (event, arg) => {
     mainWindow.minimize()
@@ -73,21 +61,9 @@ function createWindow () {
   })
 
   ipcMain.on('finish-login', (event, arg) => {
-    // mainWindow.setResizable(true)
     mainWindow.setSize(1390, 750)
     mainWindow.center()
     event.sender.send('finish-login')
-  })
-
-  ipcMain.on('open-office', (event, arg) => {
-    shell.openItem(path.join(__dirname, 'new.ppt'))
-  })
-
-  ipcMain.on('logout', (event, arg) => {
-    mainWindow.setResizable(true)
-    mainWindow.setSize(300, 440)
-    mainWindow.setResizable(false)
-    mainWindow.center()
   })
 
   ipcMain.on('open-window', (event, arg) => {
@@ -107,9 +83,20 @@ function createWindow () {
       child.show()
     })
   })
+
+  ipcMain.on('open-office', (event, arg) => {
+    shell.openItem(path.join(__dirname, 'new.ppt'))
+  })
+
+  ipcMain.on('logout', (event, arg) => {
+    mainWindow.setResizable(true)
+    mainWindow.setSize(300, 440)
+    mainWindow.setResizable(false)
+    mainWindow.center()
+  })
 }
 
-// 主进程主动发送消息给渲染进程函数
+// 主进程主动发送消息给渲染进程
 function sendUpdateMessage (message, data) {
   setTimeout(function () {
     webContents.send('message', { message, data })
@@ -117,26 +104,29 @@ function sendUpdateMessage (message, data) {
 }
 
 let checkForUpdates = () => {
-  // 设置当前版本
-  autoUpdater.currentVersion = '0.0.1'
-  autoUpdater.updateConfigPath = './resources/app-update.yml'
-
-  // 配置安装包远端服务器
+  // 配置远端的服务器
   autoUpdater.setFeedURL(feedUrl)
 
-  // 下面是自动更新的整个生命周期所发生的事件
+  // 设版本和更新索引
+  autoUpdater.updateConfigPath = './resources/app-update.yml'
+  autoUpdater.currentVersion = '0.0.1'
+
+  // 更新出错触发事件
   autoUpdater.on('error', function (message) {
     sendUpdateMessage('error', message)
   })
 
+  // 检查是否已有更新
   autoUpdater.on('checking-for-update', function (message) {
     sendUpdateMessage('checking-for-update', message)
   })
 
+  // 更新可用触发事件
   autoUpdater.on('update-available', function (message) {
     sendUpdateMessage('update-available', message)
   })
 
+  // 更新不可用的事件
   autoUpdater.on('update-not-available', function (message) {
     sendUpdateMessage('update-not-available', message)
   })
@@ -158,16 +148,12 @@ let checkForUpdates = () => {
   autoUpdater.checkForUpdates()
 }
 
-if (process.env.NODE_ENV !== 'development') {
-  checkForUpdates()
-}
-
-app.on('ready', createWindow)
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
+app.on('ready', () => {
+  if (process.env.NODE_ENV !== 'development') {
+    checkForUpdates()
   }
+
+  createWindow()
 })
 
 app.on('activate', () => {
@@ -176,22 +162,8 @@ app.on('activate', () => {
   }
 })
 
-/**
- * Auto Updater
- *
- * Uncomment the following code below and install `electron-updater` to
- * support auto updating. Code Signing with a valid certificate is required.
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
- */
-
-/*
-import { autoUpdater } from 'electron-updater'
-
-autoUpdater.on('update-downloaded', () => {
-  autoUpdater.quitAndInstall()
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
 })
-
-app.on('ready', () => {
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
-})
-*/

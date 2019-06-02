@@ -10,6 +10,9 @@ axios.defaults.baseURL = 'http://www.xuebabiji.club'
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
+/* global's part */
+window.e = new Vue()
+
 /* eslint-disable no-new */
 new Vue({
   components: { App },

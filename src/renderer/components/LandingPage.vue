@@ -1,10 +1,24 @@
 <template>
   <div class="c-landing-page">
     <div class="sidebar">
-      <div :class="{'item': true, 'active': selectedIndex == 0}" @click="activeItem(0, '/vdo')">推荐视频</div>
-      <div :class="{'item': true, 'active': selectedIndex == 1}" @click="activeItem(1, '/paper')">试卷试题</div>
-      <div :class="{'item': true, 'active': selectedIndex == 2}" @click="activeItem(2, '/ask')">提问解答</div>
-      <div :class="{'item': true, 'active': selectedIndex == 3}" @click="activeItem(3, '/my')">个人信息</div>
+      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/vdo') === 0}" @click="activeItem('/vdo')">
+        <i class="iconfont icon-ico-videolayer-qHJ"></i><span>视频</span>
+      </div>
+      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/paper') === 0 || $router.history.current.fullPath.indexOf('/question') === 0}" @click="activeItem('/paper')">
+        <i class="iconfont icon-shijuan"></i><span>组卷</span>
+      </div>
+      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/quiz') === 0}" @click="activeItem('/quiz')">
+        <i class="iconfont icon-ceshi"></i><span>测评</span>
+      </div>
+      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/courseware') === 0}" @click="activeItem('/courseware')">
+        <i class="iconfont icon-kejian"></i><span>课件</span>
+      </div>
+      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/ask') === 0}" @click="activeItem('/ask')">
+        <i class="iconfont icon-askoutline01"></i><span>提问</span>
+      </div>
+      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/my') === 0}" @click="activeItem('/my')">
+        <i class="iconfont icon-wode"></i><span>我的</span>
+      </div>
     </div>
     <div class="content">
       <router-view></router-view>
@@ -27,6 +41,7 @@
       .item {
         flex: 1;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         font-size: 15px;
@@ -37,6 +52,9 @@
         &:hover {
           border: 1px solid #097aef;
           background-color: #097aef;
+        }
+        i {
+          font-size: 36px;
         }
       }
       .active {
@@ -58,12 +76,10 @@
     name: 'landing-page',
     data () {
       return {
-        selectedIndex: 0
       }
     },
     methods: {
-      activeItem (index, path) {
-        this.selectedIndex = index
+      activeItem (path) {
         this.$router.push(path)
       }
     }
