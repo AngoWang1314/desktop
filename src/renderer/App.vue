@@ -104,6 +104,44 @@
       }, function (ret) {
         Message({message: ret.data.msg, center: true})
       })
+
+      window.e.$off('did-login')
+      window.e.$on('did-login', function () {
+        vm.$http.get('/api/common/getUserInfo').then(function (ret) {
+          if (ret.data.ok === 0) {
+            vm.$store.commit('Login/updateUserInfo', {'userInfo': ret.data.data})
+          } else {
+            Message({message: ret.data.msg, center: true})
+          }
+        }, function (ret) {
+          Message({message: ret.data.msg, center: true})
+        })
+
+        vm.$http.get('/api/common/getMyPaper').then(function (ret) {
+          if (ret.data.ok === 0) {
+            var myPaperIds = []
+            for (var i = 0, l = ret.data.data.items.length; i < l; i++) {
+              myPaperIds.push(ret.data.data.items[i]._id)
+            }
+            vm.$store.commit('Login/updateMyPaperIds', {'my_paper_ids': myPaperIds})
+            vm.$store.commit('Login/updateMyPapers', {'my_papers': ret.data.data.items})
+          } else {
+            Message({message: ret.data.msg, center: true})
+          }
+        }, function (ret) {
+          Message({message: ret.data.msg, center: true})
+        })
+
+        vm.$http.get('/api/common/getMyQuestionBasketIds').then(function (ret) {
+          if (ret.data.ok === 0) {
+            vm.$store.commit('Login/updateMyQuestionIds', {'my_question_ids': ret.data.data.my_question_ids})
+          } else {
+            Message({message: ret.data.msg, center: true})
+          }
+        }, function (ret) {
+          Message({message: ret.data.msg, center: true})
+        })
+      })
     },
     mounted () {
       function confirm (tip, callback) {

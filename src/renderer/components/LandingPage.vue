@@ -4,7 +4,7 @@
       <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/vdo') === 0}" @click="activeItem('/vdo')">
         <i class="iconfont icon-ico-videolayer-qHJ"></i><span>视频</span>
       </div>
-      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/paper') === 0 || $router.history.current.fullPath.indexOf('/question') === 0}" @click="activeItem('/paper')">
+      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/paper') === 0}" @click="activeItem('/paper')">
         <i class="iconfont icon-shijuan"></i><span>组卷</span>
       </div>
       <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/quiz') === 0}" @click="activeItem('/quiz')">

@@ -1,7 +1,51 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { ipcRenderer } from 'electron'
+import axios from 'axios'
 
 Vue.use(Router)
+
+// 挂载到vue和配置基础路径
+Vue.http = Vue.prototype.$http = axios
+axios.defaults.baseURL = 'http://www.xuebabiji.club'
+
+// http request 请求拦截器，有token值则配置上token值
+axios.interceptors.request.use(
+  config => {
+    // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加
+    var token = localStorage.getItem('token') || ''
+    if (token) {
+      config.url += '?token=' + token
+    }
+    return config
+  },
+  err => {
+    // 返回请求的错误信息
+    return Promise.reject(err)
+  }
+)
+// http response 拦截器 ,拦截token过期状态，重新登录
+axios.interceptors.response.use(
+  response => {
+    switch (response.data.ok) {
+      case -3:
+        // 返回 -3 清除token信息并跳转到登录页面
+        localStorage.removeItem('token')
+
+        ipcRenderer.send('logout')
+
+        Router.replace({
+          path: '/',
+          query: {redirect: Router.currentRoute.fullPath}
+        })
+    }
+    return response
+  },
+  error => {
+    // 返回接口的错误信息
+    return Promise.reject(error)
+  }
+)
 
 export default new Router({
   routes: [
@@ -26,24 +70,24 @@ export default new Router({
           component: require('@/components/LandingPage/Paper').default,
           children: [
             {
-              path: '/',
+              path: '',
               name: 'PaperListDetail',
               component: require('@/components/LandingPage/PaperListDetail').default,
               children: [
                 {
-                  path: '/',
+                  path: '',
                   name: 'PaperList',
                   component: require('@/components/LandingPage/PaperList').default
                 },
                 {
-                  path: '/paper-detail/:_id/:name/:subject_id/:question_ids',
+                  path: 'paper-detail/:_id/:name/:subject_id/:question_ids',
                   name: 'PaperDetail',
                   component: require('@/components/LandingPage/PaperDetail').default
                 }
               ]
             },
             {
-              path: '/question',
+              path: 'question',
               name: 'Question',
               component: require('@/components/LandingPage/Question').default
             }

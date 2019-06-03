@@ -15,7 +15,7 @@
           <option :value="item.subjectId" v-for="(item, index) in indexes.subject" :key="index">{{ item.subjectName }}</option>
         </select>
         <div class="list">
-          <input type="text" placeholder="请输入视频名称搜索" v-model="title" @keypress="myDoSearch"><button class="pure-button pure-button-primary" @click="doSearch">搜索</button>
+          <input type="text" placeholder="请输入视频名称搜索" v-model="title" @keypress="enterSearch"><button class="pure-button pure-button-primary" @click="clickSearch">搜索</button>
         </div>
       </div>
     </div>
@@ -29,9 +29,9 @@
         </div>
       </div>
       <div class="tc pagination" v-show="total > 0">
-        <span @click="prev">上一页</span>
+        <span :class="{'disabled': page < 2}" @click="prev">上一页</span>
         {{ page }}/{{ Math.ceil(total / perpage) }}
-        <span @click="next">下一页</span>
+        <span :class="{'disabled': total / perpage <= page}" @click="next">下一页</span>
       </div>
     </div>
   </div>
@@ -136,6 +136,10 @@
         margin: 0 10px;
         cursor: pointer;
       }
+      .disabled {
+        color: #ccc;
+        cursor: default;
+      }
     }
   }
 </style>
@@ -157,7 +161,7 @@
         page: 1,
         list: [],
         total: 0,
-        our_base_url: 'http://www.xuebabiji.club/player/desktop.html?item=',
+        our_base_url: 'http://www.xuebabiji.club/player/desktop.html',
         iframe_src: ''
       }
     },
@@ -168,20 +172,23 @@
       ])
     },
     created () {
-      this.doSearch()
+      this.clickSearch()
     },
     methods: {
-      myDoSearch (e) {
+      enterSearch (e) {
         if (e.keyCode === 13) {
-          this.doSearch()
+          this.clickSearch()
         }
+      },
+      clickSearch () {
+        this.page = 1
+        this.doSearch()
       },
       doSearch () {
         const vm = this
-        console.log(vm.semesterId)
+
         vm.$http.get('/api/video/getVideoList', {
           params: {
-            token: localStorage.getItem('token'),
             semesterId: vm.semesterId,
             gradeId: vm.gradeId,
             subjectId: vm.subjectId,
@@ -200,6 +207,11 @@
           Message({message: ret.data.msg, center: true})
         })
       },
+      play (item) {
+        const vm = this
+        vm.iframe_src = vm.our_base_url + '?token=' + localStorage.getItem('token') + '&item=' + encodeURIComponent(JSON.stringify(item))
+        ipcRenderer.send('open-window', vm.iframe_src)
+      },
       prev () {
         if (this.page >= 2) {
           this.page--
@@ -211,11 +223,6 @@
           this.page++
           this.doSearch()
         }
-      },
-      play (item) {
-        const vm = this
-        vm.iframe_src = vm.our_base_url + JSON.stringify(item)
-        ipcRenderer.send('open-window', vm.iframe_src)
       }
     }
   }

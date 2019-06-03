@@ -1,6 +1,6 @@
 <template>
   <div class="paper-list">
-    <div class="card" v-for="item in list" v-bind:key="item._id" v-on:tap="$router.push('/paper-detail/' + item._id + '/' + item.name + '/' + item.subjectId + '/' + item.stid.join(','))">
+    <div class="card" v-for="item in list" v-bind:key="item._id" @click="$router.push('/paper/paper-detail/' + item._id + '/' + item.name + '/' + item.subjectId + '/' + item.stid.join(','))">
       <div class="picture">
         <i class="icon iconfont icon-paper"></i>
       </div>
@@ -18,9 +18,9 @@
       </div>
     </div>
     <div class="tc pagination" v-show="total > 0">
-      <span @click="prev">上一页</span>
+      <span :class="{'disabled': page < 2}" @click="prev">上一页</span>
       {{ page }}/{{ Math.ceil(total / perpage) }}
-      <span @click="next">下一页</span>
+      <span :class="{'disabled': total / perpage <= page}" @click="next">下一页</span>
     </div>
   </div>
 </template>
@@ -37,9 +37,6 @@
       font-size: 15px;
       cursor: pointer;
       border: 1px solid #d4d4d4;
-      &:active {
-        background-color: #ECECEC;
-      }
       .picture {
         width: 60px;
         height: 60px;
@@ -83,6 +80,10 @@
         margin: 0 10px;
         cursor: pointer;
       }
+      .disabled {
+        color: #ccc;
+        cursor: default;
+      }
     }
   }
 </style>
@@ -112,12 +113,12 @@
 
       vm.doSearch()
 
-      window.e.$off('paper')
-      window.e.$on('paper', function () {
+      vm.$watch('params', function (newVal, oldVal) {
         if (vm.timerId) {
           clearTimeout(vm.timerId)
         }
         vm.timerId = setTimeout(function () {
+          vm.page = 1
           vm.doSearch()
         }, 50)
       })

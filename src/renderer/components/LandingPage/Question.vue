@@ -21,9 +21,9 @@
       </div>
     </div>
     <div class="tc pagination" v-show="total > 0">
-      <span @click="prev">上一页</span>
+      <span :class="{'disabled': page < 2}" @click="prev">上一页</span>
       {{ page }}/{{ Math.ceil(total / perpage) }}
-      <span @click="next">下一页</span>
+      <span :class="{'disabled': total / perpage <= page}" @click="next">下一页</span>
     </div>
   </div>
 </template>
@@ -37,7 +37,7 @@
       font-size: 15px;
       color: #000;
       overflow: hidden;
-      border: 1px solid #efefef;
+      border: 1px solid #d4d4d4;
       .content {
         margin-bottom: 8px;
         text-align: justify;
@@ -55,7 +55,7 @@
         text-align: right;
         line-height: 36px;
         .btn {
-          margin-left: 10px;
+          margin-right: 10px;
           color: #007aff;
           cursor: pointer;
         }
@@ -78,11 +78,16 @@
         margin: 0 10px;
         cursor: pointer;
       }
+      .disabled {
+        color: #ccc;
+        cursor: default;
+      }
     }
   }
 </style>
 
 <script>
+  import { ipcRenderer } from 'electron'
   import { mapState } from 'vuex'
   import { Message } from 'element-ui'
 
@@ -106,15 +111,21 @@
     created () {
       const vm = this
 
-      window.e.$off('question')
-      window.e.$on('question', function () {
+      vm.doSearch()
+
+      vm.$watch('params', function (newVal, oldVal) {
         if (vm.timerId) {
           clearTimeout(vm.timerId)
         }
         vm.timerId = setTimeout(function () {
+          vm.page = 1
           vm.doSearch()
         }, 50)
       })
+    },
+    mounted () {
+      this.my_question_ids = this.$store.state.Login.my_question_ids
+      console.log(this.my_question_ids)
     },
     methods: {
       doSearch () {
@@ -183,19 +194,20 @@
       addQuestionToMyQuestionBasket (questionId, typeId) {
         var vm = this
 
-        if (!vm.$store.state.token) {
-          vm.$router.push('/login')
+        if (!localStorage.getItem('token')) {
+          ipcRenderer.send('logout')
+          this.$router.push('/')
           return
         }
 
-        vm.$http.post('/api/common/addQuestionToMyQuestionBasket?token=' + vm.$store.state.token, {
+        vm.$http.post('/api/common/addQuestionToMyQuestionBasket', {
           question_id: questionId,
           collections: vm.getSubjectCollections(vm.params.subjectId),
           type_id: typeId
         }).then(function (ret) {
           Message({message: ret.data.msg, center: true})
 
-          vm.my_question_ids.push(questionId)
+          vm.$store.commit('Login/updateMyQuestionIds', {'question_id': questionId})
         }, function (ret) {
           Message({message: ret.data.msg, center: true})
         })

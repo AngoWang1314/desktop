@@ -104,6 +104,7 @@
           if (ret.data.ok === 0) {
             localStorage.setItem('token', ret.data.data.token)
             ipcRenderer.send('finish-login')
+            window.e.$emit('did-login')
             vm.$router.push('/vdo')
           } else {
             Message({message: ret.data.msg, center: true})

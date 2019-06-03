@@ -1,16 +1,16 @@
 const state = {
-  num: 1
+  count: 1
 }
 
 const getters = {
-  tenNum: (state, getters) => {
-    return 10 * state.num
+  tenTimesCount: (state, getters) => {
+    return 10 * state.count
   }
 }
 
 const mutations = {
   INCREASE (state, payload) {
-    state.num += payload.num
+    state.count += payload.count
   }
 }
 

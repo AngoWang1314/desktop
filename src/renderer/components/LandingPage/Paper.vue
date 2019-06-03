@@ -36,10 +36,10 @@
         </select>
         <select v-model="yearId">
           <option value="">请选择年份</option>
-          <option :value="item.yearId" v-for="(item, index) in indexes.year" :key="index">{{ item.yearName }}</option>
+          <option :value="item.yearId" v-for="(item, index) in [].concat(indexes.year).reverse()" :key="index">{{ item.yearName }}</option>
         </select>
         <div class="list">
-          <input type="text" placeholder="请输入关键词进行搜索" v-model="keyword" @keypress="myDoSearch"><button class="pure-button pure-button-primary" @click="doSearch">搜索</button>
+          <input type="text" placeholder="请输入关键词进行搜索" v-model="keyword" @keypress="enterSearch"><button class="pure-button pure-button-primary" @click="clickSearch">搜索</button>
         </div>
       </div>
     </div>
@@ -98,49 +98,11 @@
       }
     }
     .result-container {
+      height: calc(100% - 58px);
       margin: 0 auto;
       padding: 5px;
       text-align: center;
       overflow: auto;
-      @media screen and (max-width: 1390px) {
-        max-height: 650px;
-      }
-      .item {
-        display: inline-block;
-        width: 100%;
-        height: 270px;
-        padding: 5px;
-        cursor: pointer;
-        @media screen and (max-width: 1390px) {
-          height: 175px;
-        }
-        .img-container {
-          width: 100%;
-          height: 240px;
-          background-size: cover;
-          background-position: center;
-          border: 1px solid #d8d8d8;
-          @media screen and (max-width: 1390px) {
-            height: 145px;
-          }
-          img {
-            width: 100%;
-            height: 100%;
-          }
-        }
-        .description {
-          width: 100%;
-          height: 30px;
-          line-height: 30px;
-          padding: 0px 5px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          font-size: 13px;
-          white-space: nowrap;
-          border: 1px solid #d8d8d8;
-          border-top: 0;
-        }
-      }
     }
     .pagination {
       margin: 30px 0px;
@@ -168,7 +130,8 @@
         typeId: '',
         areaId: '',
         yearId: '',
-        keyword: ''
+        keyword: '',
+        timerId: null
       }
     },
     computed: {
@@ -176,14 +139,34 @@
         'indexes'
       ])
     },
-    mounted () {
+    created () {
       this.doSearch()
     },
+    mounted () {
+      const vm = this
+
+      vm.$watch('type', function (newVal, oldVal) {
+        if (vm.timerId) {
+          clearTimeout(vm.timerId)
+        }
+        vm.timerId = setTimeout(function () {
+          vm.doSearch()
+          if (vm.type === 'paper') {
+            vm.$router.push('/paper')
+          } else {
+            vm.$router.push('/paper/question')
+          }
+        }, 100)
+      })
+    },
     methods: {
-      myDoSearch (e) {
+      enterSearch (e) {
         if (e.keyCode === 13) {
           this.doSearch()
         }
+      },
+      clickSearch () {
+        this.doSearch()
       },
       doSearch () {
         const vm = this
@@ -201,14 +184,6 @@
             keyword: vm.keyword
           }
         })
-
-        if (vm.type === 'paper') {
-          vm.$router.push('/paper')
-          window.e.$emit('paper')
-        } else {
-          vm.$router.push('/question')
-          window.e.$emit('question')
-        }
       }
     }
   }
