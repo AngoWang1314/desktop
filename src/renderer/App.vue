@@ -8,7 +8,7 @@
 <style>
   @import '~purecss/build/pure.css';
   @import '~element-ui/lib/theme-chalk/index.css';
-  @import 'https://at.alicdn.com/t/font_919985_do7c4ug0m5.css';
+  @import 'https://at.alicdn.com/t/font_919985_5hkdvyny9yy.css';
 
   html {
     height: 100vh;
@@ -61,6 +61,16 @@
   img {
     vertical-align: middle;
   }
+
+  .icon-yuwen:before { content: "\e654"; }
+  .icon-shuxue:before { content: "\e645"; }
+  .icon-yingyu:before { content: "\e652"; }
+  .icon-shengwu:before { content: "\e62f"; }
+  .icon-physic:before { content: "\e63d"; }
+  .icon-chemistry:before { content: "\e650"; }
+  .icon-zhengzhi:before { content: "\e655"; }
+  .icon-dili:before { content: "\e60a"; }
+  .icon-lishi:before { content: "\e602"; }
 
   ::-webkit-scrollbar {
     width: 12px;
@@ -124,7 +134,6 @@
               myPaperIds.push(ret.data.data.items[i]._id)
             }
             vm.$store.commit('Login/updateMyPaperIds', {'my_paper_ids': myPaperIds})
-            vm.$store.commit('Login/updateMyPapers', {'my_papers': ret.data.data.items})
           } else {
             Message({message: ret.data.msg, center: true})
           }

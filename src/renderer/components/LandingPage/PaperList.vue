@@ -1,6 +1,6 @@
 <template>
   <div class="paper-list">
-    <div class="card" v-for="item in list" v-bind:key="item._id" @click="$router.push('/paper/paper-detail/' + item._id + '/' + item.name + '/' + item.subjectId + '/' + item.stid.join(','))">
+    <div class="card" v-for="item in list" v-bind:key="item._id" @click="$router.push('/paper/paper-list-detail/paper-detail/' + item._id + '/' + item.name + '/' + item.subjectId + '/' + item.stid.join(',') + '/' + page)">
       <div class="picture">
         <i class="icon iconfont icon-paper"></i>
       </div>
@@ -28,8 +28,7 @@
 <style scoped lang="less">
   .paper-list {
     .card {
-      width: 900px;
-      margin: 5px auto;
+      margin-bottom: 10px;
       display: flex;
       flex-direction: row;
       padding: 9px 5px;
@@ -50,7 +49,7 @@
       .content {
         display: flex;
         flex-direction: row;
-        width: 500px;
+        flex: 1;
         .name {
           padding: 8px 0 5px 0;
           color: #000;
@@ -95,8 +94,10 @@
   export default {
     name: 'PaperList',
     data () {
+      const vm = this
+
       return {
-        page: 1,
+        page: vm.$route.params.page,
         perpage: 10,
         list: [],
         total: 0,

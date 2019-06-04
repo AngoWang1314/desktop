@@ -1,10 +1,10 @@
 <template>
   <div class="paper-detail">
     <div class="name">
-      <div class="btn" style="text-align: left;" @click="$router.back()">返回列表</div>
+      <div class="btn" style="text-align: left;" @click="goBack">返回列表</div>
       <div class="content">{{ $route.params.name }}</div>
-      <div class="btn" @click="addPaperToMyPaper()" v-if="my_paper_ids.indexOf($route.params._id) === -1">加入测评</div>
-      <div class="added" v-if="my_paper_ids.indexOf($route.params._id) > -1">已经加入</div>
+      <div class="btn" @click="addPaperToMyPaper" v-if="$store.state.Login.my_paper_ids.indexOf($route.params._id) === -1">加入测评</div>
+      <div class="added" v-if="$store.state.Login.my_paper_ids.indexOf($route.params._id) > -1">已经加入</div>
     </div>
     <div class="list-container">
       <div class="list-item" v-for="item in paper_questions" v-bind:key="item._id">
@@ -19,8 +19,8 @@
         </div>
         <div class="operation">
           <span class="btn" @click="toggleAnswerAnalyse(item)">{{item.showAnswerResolveContent ? '隐藏答案解析' : '显示答案解析'}}</span>
-          <span class="btn" @click="addQuestionToMyQuestionBasket(item._id, item.typeId)" v-if="my_question_ids.indexOf(item._id) ===-1">加入测评</span>
-          <span class="added" v-if="my_question_ids.indexOf(item._id) > -1">已经加入</span>
+          <span class="btn" @click="addQuestionToMyQuestionBasket(item._id, item.typeId)" v-if="$store.state.Login.my_question_ids.indexOf(item._id) ===-1">加入测评</span>
+          <span class="added" v-if="$store.state.Login.my_question_ids.indexOf(item._id) > -1">已经加入</span>
         </div>
         <div class="answer-resolve-content" v-if="item.showAnswerResolveContent">
           <div class="answer" v-html="item.answer"></div>
@@ -39,10 +39,9 @@
       align-items: center;
       position: relative;;
       z-index: 100;
-      width: 900px;
       height: 80px;
-      margin: 0 auto;
-      padding: 5px;
+      margin: 0 auto 10px;
+      padding: 0 10px;
       text-align: center;
       font-size: 18px;
       color: #000;
@@ -70,8 +69,7 @@
     }
     .list-container {
       .list-item {
-        width: 900px;
-        margin: 5px auto;
+        margin-bottom: 10px;
         padding: 5px;
         font-size: 15px;
         color: #000;
@@ -123,8 +121,6 @@
     name: 'PaperDetail',
     data () {
       return {
-        my_paper_ids: [],
-        my_question_ids: [],
         paper_questions: []
       }
     },
@@ -132,11 +128,6 @@
       const vm = this
 
       vm.getPaperDetail()
-    },
-    mounted () {
-      this.my_paper_ids = this.$store.state.Login.my_paper_ids
-      this.my_question_ids = this.$store.state.Login.my_question_ids
-      console.log(this.my_paper_ids, this.my_question_ids)
     },
     methods: {
       getPaperDetail () {
@@ -183,6 +174,9 @@
 
         return collectionsNames[subjectId]
       },
+      goBack () {
+        this.$router.push('/paper/paper-list-detail/paper-list/' + this.$route.params.page)
+      },
       addPaperToMyPaper () {
         var vm = this
 
@@ -197,7 +191,7 @@
         }).then(function (ret) {
           Message({message: ret.data.msg, center: true})
 
-          vm.$store.commit('Login/updateMyPaperIds', {'paper_id': vm.$route.params._id})
+          vm.$store.commit('Login/addMyPaperIds', {'paper_id': vm.$route.params._id})
         }, function (ret) {
           Message({message: ret.data.msg, center: true})
         })
@@ -218,7 +212,7 @@
         }).then(function (ret) {
           Message({message: ret.data.msg, center: true})
 
-          vm.$store.commit('Login/updateMyQuestionIds', {'question_id': questionId})
+          vm.$store.commit('Login/addMyQuestionIds', {'question_id': questionId})
         }, function (ret) {
           Message({message: ret.data.msg, center: true})
         })

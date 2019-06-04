@@ -70,17 +70,17 @@ export default new Router({
           component: require('@/components/LandingPage/Paper').default,
           children: [
             {
-              path: '',
+              path: 'paper-list-detail',
               name: 'PaperListDetail',
               component: require('@/components/LandingPage/PaperListDetail').default,
               children: [
                 {
-                  path: '',
+                  path: 'paper-list/:page',
                   name: 'PaperList',
                   component: require('@/components/LandingPage/PaperList').default
                 },
                 {
-                  path: 'paper-detail/:_id/:name/:subject_id/:question_ids',
+                  path: 'paper-detail/:_id/:name/:subject_id/:question_ids/:page',
                   name: 'PaperDetail',
                   component: require('@/components/LandingPage/PaperDetail').default
                 }
@@ -88,15 +88,47 @@ export default new Router({
             },
             {
               path: 'question',
-              name: 'Question',
-              component: require('@/components/LandingPage/Question').default
+              name: 'PaperQuestion',
+              component: require('@/components/LandingPage/PaperQuestion').default
             }
           ]
         },
         {
           path: '/quiz',
           name: 'quiz',
-          component: require('@/components/LandingPage/Quiz').default
+          component: require('@/components/LandingPage/Quiz').default,
+          children: [
+            {
+              path: 'quiz-question-basket',
+              name: 'QuizQuestionBasket',
+              component: require('@/components/LandingPage/QuizQuestionBasket').default
+            },
+            {
+              path: 'quiz-question-basket-detail/:subject_id',
+              name: 'QuizQuestionBasketDetail',
+              component: require('@/components/LandingPage/QuizQuestionBasketDetail').default
+            },
+            {
+              path: 'quiz-paper',
+              name: 'QuizPaper',
+              component: require('@/components/LandingPage/QuizPaper').default
+            },
+            {
+              path: 'quiz-paper-detail/:_id/:name/:subject_id/:my_quiz_id/:remain_time/:question_ids',
+              name: 'QuizPaperDetail',
+              component: require('@/components/LandingPage/QuizPaperDetail').default
+            },
+            {
+              path: 'quiz-record',
+              name: 'QuizRecord',
+              component: require('@/components/LandingPage/QuizRecord').default
+            },
+            {
+              path: 'quiz-record-detail',
+              name: 'QuizRecordDetail',
+              component: require('@/components/LandingPage/QuizRecordDetail').default
+            }
+          ]
         },
         {
           path: '/courseware',

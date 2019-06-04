@@ -32,7 +32,7 @@
       text-align: right;
       .minimize, .maximize-restore, .close {
         position: relative;
-        z-index: 10000;
+        z-index: 1000;
         width: 42px;
         height: 43px;
         text-align: center;

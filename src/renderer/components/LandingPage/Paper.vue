@@ -98,9 +98,9 @@
       }
     }
     .result-container {
-      height: calc(100% - 58px);
+      height: calc(100% - 50px);
       margin: 0 auto;
-      padding: 5px;
+      padding: 10px;
       text-align: center;
       overflow: auto;
     }
@@ -120,10 +120,12 @@
   export default {
     name: 'paper',
     data () {
+      const vm = this
+
       return {
-        type: 'paper',
+        type: vm.$store.state.Paper.params.subjectId ? 'question' : 'paper',
         semesterId: '',
-        subjectId: '0',
+        subjectId: vm.$store.state.Paper.params.subjectId ? vm.$store.state.Paper.params.subjectId : '0',
         versionId: '',
         examtypeId: '',
         creditLineId: '',
@@ -152,7 +154,7 @@
         vm.timerId = setTimeout(function () {
           vm.doSearch()
           if (vm.type === 'paper') {
-            vm.$router.push('/paper')
+            vm.$router.push('/paper/paper-list-detail/paper-list/1')
           } else {
             vm.$router.push('/paper/question')
           }

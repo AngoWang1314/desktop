@@ -4,10 +4,10 @@
       <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/vdo') === 0}" @click="activeItem('/vdo')">
         <i class="iconfont icon-ico-videolayer-qHJ"></i><span>视频</span>
       </div>
-      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/paper') === 0}" @click="activeItem('/paper')">
+      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/paper') === 0}" @click="activeItem('/paper/paper-list-detail/paper-list/1')">
         <i class="iconfont icon-shijuan"></i><span>组卷</span>
       </div>
-      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/quiz') === 0}" @click="activeItem('/quiz')">
+      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/quiz') === 0}" @click="activeItem('/quiz/quiz-question-basket')">
         <i class="iconfont icon-ceshi"></i><span>测评</span>
       </div>
       <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/courseware') === 0}" @click="activeItem('/courseware')">
