@@ -3,8 +3,8 @@
     <div class="search-condition-container">
       <div class="row">
         <select v-model="type">
-          <option value="paper">试卷</option>
-          <option value="question">试题</option>
+          <option :value="'paper'">试卷</option>
+          <option :value="'question'">试题</option>
         </select>
         <select v-model="semesterId">
           <option value="">请选择学段</option>
@@ -123,17 +123,16 @@
       const vm = this
 
       return {
-        type: vm.$store.state.Paper.params.subjectId ? 'question' : 'paper',
-        semesterId: '',
-        subjectId: vm.$store.state.Paper.params.subjectId ? vm.$store.state.Paper.params.subjectId : '0',
-        versionId: '',
-        examtypeId: '',
-        creditLineId: '',
-        typeId: '',
-        areaId: '',
-        yearId: '',
-        keyword: '',
-        timerId: null
+        type: vm.$store.state.Paper.params.type,
+        semesterId: vm.$store.state.Paper.params.semesterId,
+        subjectId: vm.$store.state.Paper.params.subjectId,
+        versionId: vm.$store.state.Paper.params.versionId,
+        examtypeId: vm.$store.state.Paper.params.examtypeId,
+        creditLineId: vm.$store.state.Paper.params.creditLineId,
+        typeId: vm.$store.state.Paper.params.typeId,
+        areaId: vm.$store.state.Paper.params.areaId,
+        yearId: vm.$store.state.Paper.params.yearId,
+        keyword: vm.$store.state.Paper.params.keyword
       }
     },
     computed: {
@@ -143,23 +142,6 @@
     },
     created () {
       this.doSearch()
-    },
-    mounted () {
-      const vm = this
-
-      vm.$watch('type', function (newVal, oldVal) {
-        if (vm.timerId) {
-          clearTimeout(vm.timerId)
-        }
-        vm.timerId = setTimeout(function () {
-          vm.doSearch()
-          if (vm.type === 'paper') {
-            vm.$router.push('/paper/paper-list-detail/paper-list/1')
-          } else {
-            vm.$router.push('/paper/question')
-          }
-        }, 100)
-      })
     },
     methods: {
       enterSearch (e) {
@@ -175,6 +157,7 @@
 
         vm.$store.commit('Paper/updateParams', {
           'params': {
+            type: vm.type,
             semesterId: vm.semesterId,
             subjectId: vm.subjectId,
             versionId: vm.versionId,
@@ -186,6 +169,14 @@
             keyword: vm.keyword
           }
         })
+
+        setTimeout(function () {
+          if (vm.type === 'paper') {
+            vm.$router.push('/paper/paper-list-detail/paper-list/1')
+          } else {
+            vm.$router.push('/paper/question')
+          }
+        }, 50)
       }
     }
   }

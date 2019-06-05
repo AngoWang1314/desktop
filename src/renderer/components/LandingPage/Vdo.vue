@@ -209,7 +209,7 @@
       },
       play (item) {
         const vm = this
-        vm.iframe_src = vm.our_base_url + '?token=' + localStorage.getItem('token') + '&item=' + encodeURIComponent(JSON.stringify(item))
+        vm.iframe_src = vm.our_base_url + '?token=' + localStorage.getItem('token') + '&_id=' + item._id
         ipcRenderer.send('open-window', vm.iframe_src)
       },
       prev () {

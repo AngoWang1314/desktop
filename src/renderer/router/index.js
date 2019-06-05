@@ -68,6 +68,9 @@ export default new Router({
           path: '/paper',
           name: 'paper',
           component: require('@/components/LandingPage/Paper').default,
+          meta: {
+            keepAlive: false
+          },
           children: [
             {
               path: 'paper-list-detail',

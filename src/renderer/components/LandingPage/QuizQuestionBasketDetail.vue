@@ -48,7 +48,6 @@
       z-index: 100;
       height: 80px;
       margin: 10px;
-      padding: 5px 25px;
       text-align: center;
       font-size: 18px;
       color: #000;
@@ -246,7 +245,7 @@
       jump: function () {
         const vm = this
 
-        vm.$store.commit('Paper/updateSubjectId', {'subject_id': vm.$route.params.subject_id})
+        vm.$store.commit('Paper/updateParamsTypeSubjectId', {'type': 'question', 'subject_id': vm.$route.params.subject_id})
         vm.$router.push('/paper/question')
       }
     }

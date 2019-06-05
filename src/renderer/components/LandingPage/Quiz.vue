@@ -34,7 +34,6 @@
     }
     .content {
       height: calc(100% - 45px);
-      padding: 10px;
       overflow: auto;
     }
   }

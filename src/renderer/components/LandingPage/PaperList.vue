@@ -128,6 +128,8 @@
       doSearch () {
         const vm = this
 
+        vm.$store.commit('Paper/updateParamsType', {'type': 'paper'})
+
         vm.$http.get('/api/common/getPaper', {
           params: {
             page: vm.page,

@@ -1,7 +1,8 @@
 const state = {
   params: {
+    type: 'paper',
     semesterId: '',
-    subjectId: '',
+    subjectId: '0',
     versionId: '',
     examtypeId: '',
     creditLineId: '',
@@ -19,9 +20,13 @@ const mutations = {
   updateParams (state, payload) {
     state.params = payload.params
   },
-  updateSubjectId (state, payload) {
+  updateParamsType (state, payload) {
+    state.params.type = payload.type
+    console.log(payload.type)
+  },
+  updateParamsTypeSubjectId (state, payload) {
+    state.params.type = payload.type
     state.params.subjectId = payload.subject_id
-    console.log(state.params.subjectId)
   }
 }
 

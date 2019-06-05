@@ -23,8 +23,9 @@
     -webkit-app-region: drag;
     .app-name {
       float: left;
-      width: 64px;
+      width: 75px;
       margin-left: 10px;
+      border-right: 1px solid #3a98f9;
       -webkit-app-region: no-drag;
     }
     .operation {

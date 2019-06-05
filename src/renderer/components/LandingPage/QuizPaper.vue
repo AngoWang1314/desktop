@@ -24,6 +24,7 @@
 
 <style scoped lang="less">
   .quiz-paper {
+    padding: 10px;
     .card {
       margin-bottom: 10px;
       display: flex;

@@ -80,6 +80,13 @@
     },
     methods: {
       activeItem (path) {
+        var nowStartWith = this.$router.history.current.fullPath.split('/')[1]
+        var toStartWith = path.split('/')[1]
+
+        if (nowStartWith === toStartWith) {
+          return
+        }
+
         this.$router.push(path)
       }
     }
