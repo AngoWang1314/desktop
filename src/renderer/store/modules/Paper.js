@@ -22,7 +22,6 @@ const mutations = {
   },
   updateParamsType (state, payload) {
     state.params.type = payload.type
-    console.log(payload.type)
   },
   updateParamsTypeSubjectId (state, payload) {
     state.params.type = payload.type

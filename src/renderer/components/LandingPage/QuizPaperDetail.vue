@@ -6,7 +6,7 @@
       <div class="btn" @click="startMyQuiz" v-show="remainTime > 0">{{my_quiz_id === '0' ? '开始测评' : '提交试卷'}}</div>
     </div>
     <div class="list-container">
-      <div class="list-item" v-for="item in $store.state.paper_questions" v-bind:key="item._id">
+      <div class="list-item" v-for="item in paper_questions" v-bind:key="item._id">
         <div class="content" v-html="item.content"></div>
         <div class="options">
           <div class="option" v-if="item.option1" v-html="item.option1"></div>
@@ -26,7 +26,7 @@
             <input type="text" placeholder="请输入答案" v-model="item.text" :disabled="remainTime === 0">
             <div class="upload-container">
               <form @submit.prevent="upload" method="post" enctype="multipart/form-data" v-show="remainTime !== 0">
-                <input type="file" name="picture" class="btn" @click:change="onChange($event, item)">
+                <input type="file" name="picture" class="btn" @change="onChange($event, item)">
               </form>
               <label class="btn" :style="{'color': remainTime === 0 ? '#ccc' : ''}">上传答案</label>
             </div>
@@ -99,6 +99,7 @@
         .options {
           overflow: hidden;
           .option {
+            text-align: left;
             line-height: 18px;
             margin-top: 8px;
           }
@@ -163,9 +164,11 @@
           }
         }
         .answer {
+          text-align: left;
           line-height: 36px;
         }
         .resolve-content {
+          text-align: left;
         }
       }
     }
@@ -331,8 +334,13 @@
                 }).then(function (ret) {
                   if (ret.data.ok === 0) {
                     vm.remainTime = ret.data.data.remainTime
+                    if (vm.remainTime === 5 * 60 * 1000) {
+                      Message({message: '还剩5分钟就到交卷时间，请输入或上传答案！', center: true})
+                    }
                     if (vm.remainTime === 0) {
                       clearInterval(vm.timerId)
+                      Message({message: '时间已到，系统自动交卷！', center: true})
+                      vm.$router.replace('/quiz/quiz-paper-detail/' + vm.$route.params._id + '/' + vm.$route.params.name + '/' + vm.$route.params.subject_id + '/' + vm.my_quiz_id + '/0/' + vm.$route.params.question_ids)
                     }
                   } else {
                     Message({message: ret.data.msg, center: true})
@@ -361,9 +369,7 @@
               vm.remainTime = 0
               clearInterval(vm.timerId)
 
-              console.log(vm.my_quiz_id)
-
-              vm.$router.replace('/quiz/paper-detail/' + vm.$route.params._id + '/' + vm.$route.params.name + '/' + vm.$route.params.subject_id + '/' + vm.my_quiz_id + '/0/' + vm.$route.params.question_ids)
+              vm.$router.replace('/quiz/quiz-paper-detail/' + vm.$route.params._id + '/' + vm.$route.params.name + '/' + vm.$route.params.subject_id + '/' + vm.my_quiz_id + '/0/' + vm.$route.params.question_ids)
             } else {
               Message({message: ret.data.msg, center: true})
             }

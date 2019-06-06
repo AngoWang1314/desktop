@@ -55,7 +55,7 @@
 </style>
 
 <script>
-  import { ipcRenderer } from 'electron'
+  // import { ipcRenderer } from 'electron'
 
   export default {
     name: 'title-bar',
@@ -68,24 +68,34 @@
     },
     created () {
       var vm = this
-      vm.listener = ipcRenderer.on('toggle-window', function () {
-        vm.is_fullscreen = !vm.is_fullscreen
-      })
+      if (!process.env.IS_WEB) {
+        vm.listener = require('electron').ipcRenderer.on('toggle-window', function () {
+          vm.is_fullscreen = !vm.is_fullscreen
+        })
+      }
     },
     methods: {
       minWindow () {
-        ipcRenderer.send('min-window')
+        if (!process.env.IS_WEB) {
+          require('electron').ipcRenderer.send('min-window')
+        }
       },
       toggleWindow () {
-        ipcRenderer.send('toggle-window')
+        if (!process.env.IS_WEB) {
+          require('electron').ipcRenderer.send('toggle-window')
+        }
       },
       closeWindow () {
-        ipcRenderer.send('close-window')
+        if (!process.env.IS_WEB) {
+          require('electron').ipcRenderer.send('close-window')
+        }
       }
     },
     destroyed () {
       var vm = this
-      ipcRenderer.removeListener(vm.listener)
+      if (!process.env.IS_WEB) {
+        require('electron').ipcRenderer.removeListener(vm.listener)
+      }
     }
   }
 </script>

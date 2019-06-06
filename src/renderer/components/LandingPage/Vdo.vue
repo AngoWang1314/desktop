@@ -145,7 +145,7 @@
 </style>
 
 <script>
-  import { ipcRenderer } from 'electron'
+  // import { ipcRenderer } from 'electron'
   import { mapState } from 'vuex'
   import { Message } from 'element-ui'
 
@@ -210,7 +210,9 @@
       play (item) {
         const vm = this
         vm.iframe_src = vm.our_base_url + '?token=' + localStorage.getItem('token') + '&_id=' + item._id
-        ipcRenderer.send('open-window', vm.iframe_src)
+        if (!process.env.IS_WEB) {
+          require('electron').ipcRenderer.send('open-window', vm.iframe_src)
+        }
       },
       prev () {
         if (this.page >= 2) {

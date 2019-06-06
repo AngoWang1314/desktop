@@ -87,7 +87,7 @@
 </style>
 
 <script>
-  import { ipcRenderer, webFrame } from 'electron'
+  // import { ipcRenderer, webFrame } from 'electron'
   import TitleBar from '@/components/TitleBar'
   import { Message } from 'element-ui'
 
@@ -97,8 +97,10 @@
       TitleBar
     },
     data () {
-      webFrame.setZoomFactor(1.0)
-      webFrame.setZoomLevel(0)
+      if (!process.env.IS_WEB) {
+        require('electron').webFrame.setZoomFactor(1.0)
+        require('electron').webFrame.setZoomLevel(0)
+      }
       return {
       }
     },
@@ -203,13 +205,15 @@
         }
       }
 
-      ipcRenderer.on('message', (event, {message, data}) => {
-        if (message === 'is-update-now') {
-          confirm('发现新版本，立即更新？', function () {
-            ipcRenderer.send('update-now')
-          })
-        }
-      })
+      if (!process.env.IS_WEB) {
+        require('electron').ipcRenderer.on('message', (event, {message, data}) => {
+          if (message === 'is-update-now') {
+            confirm('发现新版本，立即更新？', function () {
+              require('electron').ipcRenderer.send('update-now')
+            })
+          }
+        })
+      }
     }
   }
 </script>

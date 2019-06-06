@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import { ipcRenderer } from 'electron'
+// import { ipcRenderer } from 'electron'
 import axios from 'axios'
 
 Vue.use(Router)
@@ -32,7 +32,9 @@ axios.interceptors.response.use(
         // 返回 -3 清除token信息并跳转到登录页面
         localStorage.removeItem('token')
 
-        ipcRenderer.send('logout')
+        if (!process.env.IS_WEB) {
+          require('electron').ipcRenderer.send('logout')
+        }
 
         Router.replace({
           path: '/',
@@ -68,9 +70,6 @@ export default new Router({
           path: '/paper',
           name: 'paper',
           component: require('@/components/LandingPage/Paper').default,
-          meta: {
-            keepAlive: false
-          },
           children: [
             {
               path: 'paper-list-detail',
@@ -127,7 +126,7 @@ export default new Router({
               component: require('@/components/LandingPage/QuizRecord').default
             },
             {
-              path: 'quiz-record-detail',
+              path: 'quiz-record-detail/:_id/:name/:subject_id/:my_quiz_id/:remain_time/:question_ids',
               name: 'QuizRecordDetail',
               component: require('@/components/LandingPage/QuizRecordDetail').default
             }

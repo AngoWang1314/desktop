@@ -23,7 +23,7 @@
 </style>
 
 <script>
-  import { ipcRenderer } from 'electron'
+  // import { ipcRenderer } from 'electron'
 
   export default {
     name: 'my',
@@ -34,7 +34,9 @@
     methods: {
       doLogout () {
         localStorage.setItem('token', '')
-        ipcRenderer.send('logout')
+        if (!process.env.IS_WEB) {
+          require('electron').ipcRenderer.send('logout')
+        }
         this.$router.push('/')
       }
     }

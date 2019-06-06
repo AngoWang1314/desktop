@@ -2,9 +2,9 @@
   <div class="c-paper">
     <div class="search-condition-container">
       <div class="row">
-        <select v-model="type">
-          <option :value="'paper'">试卷</option>
-          <option :value="'question'">试题</option>
+        <select @change="changeType">
+          <option :value="'paper'" :selected="type === 'paper'">试卷</option>
+          <option :value="'question'" :selected="type === 'question'">试题</option>
         </select>
         <select v-model="semesterId">
           <option value="">请选择学段</option>
@@ -132,7 +132,8 @@
         typeId: vm.$store.state.Paper.params.typeId,
         areaId: vm.$store.state.Paper.params.areaId,
         yearId: vm.$store.state.Paper.params.yearId,
-        keyword: vm.$store.state.Paper.params.keyword
+        keyword: vm.$store.state.Paper.params.keyword,
+        timerId: null
       }
     },
     computed: {
@@ -141,9 +142,30 @@
       ])
     },
     created () {
-      this.doSearch()
+      const vm = this
+
+      vm.doSearch()
+
+      vm.$watch('type', function (newVal, oldVal) {
+        if (vm.timerId) {
+          clearTimeout(vm.timerId)
+        }
+        vm.timerId = setTimeout(function () {
+          if (vm.type === 'paper') {
+            vm.$router.push('/paper/paper-list-detail/paper-list/1')
+          } else {
+            vm.$router.push('/paper/question')
+          }
+        }, 50)
+      })
     },
     methods: {
+      changeType (e) {
+        const vm = this
+
+        vm.type = e.target.value
+        vm.$store.commit('Paper/updateParamsType', {'type': vm.type})
+      },
       enterSearch (e) {
         if (e.keyCode === 13) {
           this.doSearch()
@@ -169,14 +191,6 @@
             keyword: vm.keyword
           }
         })
-
-        setTimeout(function () {
-          if (vm.type === 'paper') {
-            vm.$router.push('/paper/paper-list-detail/paper-list/1')
-          } else {
-            vm.$router.push('/paper/question')
-          }
-        }, 50)
       }
     }
   }

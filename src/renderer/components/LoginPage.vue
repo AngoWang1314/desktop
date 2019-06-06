@@ -5,10 +5,10 @@
     </div>
     <div class="account-password">
       <div class="account">
-        <label>账号：</label><input type="text" placeholder="请输入账号" autoFocus :value="account" @input="updateAccount" />
+        <label>账号：</label><input type="text" placeholder="请输入账号" autoFocus :value="$store.state.Login.account" @input="updateAccount" />
       </div>
       <div class="password">
-        <label>密码：</label><input type="password" placeholder="请输入密码" :value="password" @input="updatePassword" @keypress="myDoLogin" />
+        <label>密码：</label><input type="password" placeholder="请输入密码" :value="$store.state.Login.password" @input="updatePassword" @keypress="myDoLogin" />
       </div>
       <div class="tc btn-container">
         <button class="pure-button pure-button-primary" @click="doLogin">登陆</button>
@@ -63,8 +63,7 @@
 </style>
 
 <script>
-  import { ipcRenderer } from 'electron'
-  import { mapState, mapGetters } from 'vuex'
+  // import { ipcRenderer } from 'electron'
   import { Message } from 'element-ui'
 
   export default {
@@ -73,14 +72,6 @@
     data () {
       return {
       }
-    },
-    computed: {
-      ...mapState('Login', [
-        'account',
-        'password'
-      ]),
-      ...mapGetters('Login', [
-      ])
     },
     methods: {
       updateAccount (e) {
@@ -98,12 +89,14 @@
         const vm = this
 
         vm.$http.post('/api/common/doLogin', {
-          username: vm.account,
-          password: vm.password
+          username: vm.$store.state.Login.account,
+          password: vm.$store.state.Login.password
         }).then(function (ret) {
           if (ret.data.ok === 0) {
             localStorage.setItem('token', ret.data.data.token)
-            ipcRenderer.send('finish-login')
+            if (!process.env.IS_WEB) {
+              require('electron').ipcRenderer.send('finish-login')
+            }
             window.e.$emit('did-login')
             vm.$router.push('/vdo')
           } else {

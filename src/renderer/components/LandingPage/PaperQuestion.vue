@@ -86,7 +86,7 @@
 </style>
 
 <script>
-  import { ipcRenderer } from 'electron'
+  // import { ipcRenderer } from 'electron'
   import { mapState } from 'vuex'
   import { Message } from 'element-ui'
 
@@ -189,7 +189,9 @@
         var vm = this
 
         if (!localStorage.getItem('token')) {
-          ipcRenderer.send('logout')
+          if (!process.env.IS_WEB) {
+            require('electron').ipcRenderer.send('logout')
+          }
           this.$router.push('/')
           return
         }

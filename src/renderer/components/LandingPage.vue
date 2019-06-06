@@ -80,14 +80,21 @@
     },
     methods: {
       activeItem (path) {
-        var nowStartWith = this.$router.history.current.fullPath.split('/')[1]
+        const vm = this
+
+        var nowStartWith = vm.$router.history.current.fullPath.split('/')[1]
         var toStartWith = path.split('/')[1]
 
         if (nowStartWith === toStartWith) {
           return
         }
 
-        this.$router.push(path)
+        if (toStartWith === 'paper' && vm.$store.state.Paper.params.type !== 'paper') {
+          vm.$router.push('/paper/question')
+          return
+        }
+
+        vm.$router.push(path)
       }
     }
   }

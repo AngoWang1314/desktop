@@ -1,12 +1,12 @@
 <template>
-  <div class="paper-detail">
+  <div class="quiz-record-detail">
     <div class="name">
       <div class="remain-time" v-show="remainTime > 0">{{remainTime / 60000}}分钟</div>
       <div class="content">{{this.$route.params.name}}</div>
-      <div class="btn" v-on:tap="startMyQuiz()" v-show="remainTime > 0">{{my_quiz_id === '0' ? '开始测评' : '提交试卷'}}</div>
+      <div class="btn" @click="startMyQuiz" v-show="remainTime > 0">{{my_quiz_id === '0' ? '开始测评' : '提交试卷'}}</div>
     </div>
     <div class="list-container">
-      <div class="list-item" v-for="item in $store.state.paper_questions" v-bind:key="item._id">
+      <div class="list-item" v-for="item in paper_questions" v-bind:key="item._id">
         <div class="content" v-html="item.content"></div>
         <div class="options">
           <div class="option" v-if="item.option1" v-html="item.option1"></div>
@@ -22,15 +22,17 @@
         </div>
         <div class="operation" v-show="my_quiz_id !== '0'">
           <div class="label">作答：</div>
-          <input type="text" placeholder="请输入答案" v-model="item.text" :disabled="remainTime === 0">
-          <div class="upload-container">
-            <form @submit.prevent="upload" method="post" enctype="multipart/form-data" v-show="remainTime !== 0">
-              <input type="file" name="picture" v-on:change="onChange($event, item)">
-            </form>
-            <span class="btn" :style="{'color': remainTime === 0 ? '#ccc' : ''}">上传答案</span>
+          <div class="input-upload-container-container">
+            <input type="text" placeholder="请输入答案" v-model="item.text" :disabled="remainTime === 0">
+            <div class="upload-container">
+              <form @submit.prevent="upload" method="post" enctype="multipart/form-data" v-show="remainTime !== 0">
+                <input type="file" name="picture" class="btn" @change="onChange($event, item)">
+              </form>
+              <label class="btn" :style="{'color': remainTime === 0 ? '#ccc' : ''}">上传答案</label>
+            </div>
           </div>
           <div class="img-container" v-show="item.pic">
-            <img :src="item.pic">
+            <img :src="'http://www.xuebabiji.club' + item.pic">
           </div>
         </div>
       </div>
@@ -39,379 +41,360 @@
 </template>
 
 <style scoped lang="less">
-.paper-detail {
-  height: 100%;
-  overflow: auto;
-  .name {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    position: fixed;
-    z-index: 100;
-    width: 100%;
-    height: 0.8rem;
-    margin: 0 auto;
-    padding: 0.05rem;
-    text-align: center;
-    font-size: 0.18rem;
-    color: #000;
-    font-weight: bold;
-    border-bottom: 0.01rem solid #efefef;
-    background-color: #ffffff;
-    .content {
-      flex: 2;
-      width: 55%;
+  .quiz-record-detail {
+    padding: 10px;
+    .name {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      position: relative;
+      z-index: 100;
+      width: 100%;
+      height: 80px;
       margin: 0 auto;
-    }
-    .remain-time {
-      flex: 1;
-      width: 0.8rem;
-      height: 0.18rem;
-      text-align: left;
-      font-size: 0.18rem;
-      color: #007aff;
-      font-weight: bold;
-      margin-top: -0.02rem;
-    }
-    .btn {
-      flex: 1;
-      width: 0.8rem;
-      height: 0.18rem;
-      text-align: right;
-      font-size: 0.18rem;
-      color: #007aff;
-      font-weight: bold;
-      margin-top: -0.02rem;
-    }
-  }
-  .list-container {
-    padding-top: 0.8rem;
-    .list-item {
-      margin: 0.05rem;
-      padding: 0.05rem;
-      border: 0.01rem solid #efefef;
-      font-size: 0.15rem;
+      padding: 5px;
+      text-align: center;
+      font-size: 18px;
       color: #000;
-      overflow: hidden;
+      font-weight: bold;
+      background-color: #ffffff;
       .content {
-        margin-bottom: 0.08rem;
-        text-align: justify;
-        overflow: hidden;
+        flex: 2;
+        width: 55%;
+        margin: 0 auto;
       }
-      .options {
-        overflow: hidden;
-        .option {
-          line-height: 0.18rem;
-          margin-top: 0.08rem;
-        }
-      }
-      .operation {
-        position: relative;
+      .remain-time {
+        flex: 1;
+        width: 80px;
+        height: 18px;
+        text-align: left;
+        font-size: 18px;
         color: #007aff;
+        font-weight: bold;
+      }
+      .btn {
+        flex: 1;
+        width: 80px;
+        height: 18px;
         text-align: right;
-        .label {
-          text-align: left;
-          margin: 0.15rem 0;
-          color: #000;
+        font-size: 18px;
+        color: #007aff;
+        font-weight: bold;
+        cursor: pointer;
+      }
+    }
+    .list-container {
+      .list-item {
+        margin-top: 10px;
+        padding: 5px;
+        border: 1px solid #d4d4d4;
+        font-size: 15px;
+        color: #000;
+        overflow: hidden;
+        .content {
+          margin-bottom: 8px;
+          text-align: justify;
+          overflow: hidden;
         }
-        input {
-          position: absolute;
-          left: 0;
-          width: 80%;
-          margin-bottom: 0;
-          padding-left: 0.05rem;
+        .options {
+          overflow: hidden;
+          .option {
+            text-align: left;
+            line-height: 18px;
+            margin-top: 8px;
+          }
         }
-        .upload-container {
+        .operation {
           position: relative;
-          display: inline-block;
-          width: 20%;
-          height: 0.4rem;
-          line-height: 0.4rem;
-          form {
-            position: absolute;
-            opacity: 0;
-            z-index: 10;
-            width: 100%;
-            height: 100%;
+          color: #007aff;
+          text-align: right;
+          .label {
+            text-align: left;
+            margin: 15px 0;
+            color: #000;
           }
-          .btn {
-            position: absolute;
-            z-index: 1;
-            right: 0.03rem;
+          .input-upload-container-container {
+            display: flex;
             width: 100%;
-            height: 100%;
-            font-size: 0.16rem;
-            color: #007aff;
+            input {
+              flex: 1;
+              height: 40px;
+              line-height: 40px;
+              margin-bottom: 0;
+              padding-left: 5px;
+            }
+            .upload-container {
+              position: relative;
+              display: inline-block;
+              width: 84px;
+              text-align: center;
+              height: 40px;
+              line-height: 40px;
+              form {
+                position: absolute;
+                opacity: 0;
+                z-index: 10;
+                width: 100%;
+                height: 100%;
+                input {
+                  width: 100%;
+                  height: 40px;
+                  line-height: 40px;
+                }
+              }
+              .btn {
+                position: absolute;
+                z-index: 1;
+                right: 0px;
+                width: 100%;
+                height: 100%;
+                font-size: 16px;
+                color: #007aff;
+                cursor: pointer;
+              }
+            }
+          }
+          .img-container {
+            text-align: center;
+            img {
+              width: 100%;
+              margin-top: 8px;
+              border: 1px solid #ccc;
+            }
           }
         }
-        .img-container {
-          text-align: center;
-          img {
-            width: 100%;
-            margin-top: 0.08rem;
-            border: 0.01rem solid #ccc;
-          }
+        .answer {
+          text-align: left;
+          line-height: 36px;
         }
-      }
-      .answer {
-        line-height: 0.36rem;
-      }
-      .resolve-content {
+        .resolve-content {
+          text-align: left;
+        }
       }
     }
   }
-}
 </style>
 
 <script>
-export default {
-  name: 'QuizPaperDetail',
-  data () {
-    var vm = this
+  import { Message } from 'element-ui'
 
-    vm.$http.get('/api/common/getPaperDetail', {
-      params: {
-        token: vm.$store.state.token,
-        collections: vm.getSubjectCollections(vm.$route.params.subject_id),
-        question_ids: vm.$route.params.question_ids
+  export default {
+    name: 'QuizRecordDetail',
+    data () {
+      return {
+        paper_questions: [],
+        my_quiz_id: this.$route.params.my_quiz_id,
+        remainTime: +this.$route.params.remain_time,
+        timerId: null
       }
-    }).then(function (response) {
-      var body = response.body
-
-      for (var i = 0, l = body.data.items.length; i < l; i++) {
-        body.data.items[i].text = ''
-        body.data.items[i].pic = ''
-      }
-
-      if (body.ok === 0) {
-        vm.$store.state.paper_questions = body.data.items
-        vm.show_loading = false
-
-        if (vm.my_quiz_id !== '0') {
-          vm.$http.get('/api/common/getMyAnswer?token=' + vm.$store.state.token, {
-            params: {
-              my_quiz_id: vm.my_quiz_id
-            }
-          }).then(function (response) {
-            var body = response.body
-
-            if (body.ok === 0) {
-              var answers = body.data.answers
-              for (var i = 0; i < answers.length; i++) {
-                vm.$store.state.paper_questions[i].text = answers[i].text
-                vm.$store.state.paper_questions[i].pic = answers[i].pic
-              }
-            } else {
-              window.mui.alert(body.msg, ' ')
-            }
-          }, function (response) {
-            var body = response.body
-
-            window.mui.alert(body.msg, ' ')
-          })
-        }
-      } else {
-        window.mui.alert(body.msg, ' ')
-      }
-    }, function (response) {
-      var body = response.body
-
-      window.mui.alert(body.msg, ' ')
-    })
-
-    return {
-      show_loading: true,
-      timerId: null,
-      remainTime: vm.$route.params.remain_time === '-1' ? vm.$route.params.question_ids.split(',').length * 5 * 60 * 1000 : +vm.$route.params.remain_time,
-      my_quiz_id: vm.$route.params.my_quiz_id
-    }
-  },
-  created () {
-    var vm = this
-
-    if (vm.my_quiz_id !== '0') {
-      if (vm.remainTime !== 0) {
-        vm.timerId = setInterval(function () {
-          vm.$http.post('/api/common/decreaseQuizTime?token=' + vm.$store.state.token, {
-            my_quiz_id: vm.my_quiz_id
-          }).then(function (response) {
-            var body = response.body
-
-            if (body.ok === 0) {
-              vm.remainTime = body.data.remainTime
-              clearInterval(vm.timerId)
-            } else {
-              window.mui.alert(body.msg, ' ')
-            }
-          }, function (response) {
-            var body = response.body
-
-            window.mui.alert(body.msg, ' ')
-          })
-        }, 60000)
-      }
-    }
-  },
-  computed: {
-    paper_questions: {
-      get: function (state) {
-        return state.paper_questions
-      },
-      set: function (val) {
-        this.$store.state.paper_questions = val
-      }
-    }
-  },
-  methods: {
-    toggleAnswerAnalyse: function (item) {
-      item.showAnswerResolveContent = !item.showAnswerResolveContent
     },
-    getSubjectCollections: function (subjectId) {
-      var collectionsNames = {
-        '0': 'Mathematics',
-        '1': 'English',
-        '2': 'Physics',
-        '3': 'Chemistry',
-        '4': 'Chinese',
-        '5': 'Biology',
-        '6': 'History',
-        '7': 'Geography',
-        '8': 'Politics',
-        '9': 'ScienceSynthesis',
-        '10': 'LiberalArtsSynthesis',
-        '11': 'General',
-        '12': 'Other'
-      }
-
-      return collectionsNames[subjectId]
-    },
-    startMyQuiz: function () {
+    created () {
       var vm = this
 
-      var length = vm.$route.params.question_ids.split(',').length
-      if (vm.my_quiz_id === '0') {
-        vm.$http.post('/api/common/startMyQuiz?token=' + vm.$store.state.token, {
-          paper_id: vm.$route.params._id,
-          name: vm.$route.params.name,
-          subject_id: vm.$route.params.subject_id,
-          stid: vm.$route.params.question_ids,
-          length: length,
-          answers: []
-        }).then(function (response) {
-          var body = response.body
-
-          vm.my_quiz_id = body.data.my_quiz_id
-
-          vm.remainTime = length * 5 * 60 * 1000
-
-          if (body.ok === 0) {
-            vm.timerId = setInterval(function () {
-              vm.$http.post('/api/common/decreaseQuizTime?token=' + vm.$store.state.token, {
-                my_quiz_id: vm.my_quiz_id
-              }).then(function (response) {
-                var body = response.body
-
-                if (body.ok === 0) {
-                  vm.remainTime = body.data.remainTime
-                  if (vm.remainTime === 0) {
-                    clearInterval(vm.timerId)
-                  }
-                } else {
-                  window.mui.alert(body.msg, ' ')
-                }
-              }, function (response) {
-                var body = response.body
-
-                window.mui.alert(body.msg, ' ')
-              })
-            }, 60000)
-          } else {
-            window.mui.alert(body.msg, ' ')
-          }
-        }, function (response) {
-          var body = response.body
-
-          window.mui.alert(body.msg, ' ')
-        })
-      } else {
-        var answers = []
-        for (var i = 0; i < length; i++) {
-          answers.push({text: vm.$store.state.paper_questions[i].text, pic: vm.$store.state.paper_questions[i].pic})
-        }
-        vm.$http.post('/api/common/setMyAnswer?token=' + vm.$store.state.token, {
-          my_quiz_id: vm.my_quiz_id,
-          answers: answers,
-          finish: 1
-        }).then(function (response) {
-          var body = response.body
-
-          if (body.ok === 0) {
-            vm.remainTime = 0
-            clearInterval(vm.timerId)
-
-            console.log(vm.my_quiz_id)
-
-            vm.$router.replace('/quiz/paper-detail/' + vm.$route.params._id + '/' + vm.$route.params.name + '/' + vm.$route.params.subject_id + '/' + vm.my_quiz_id + '/0/' + vm.$route.params.question_ids)
-          } else {
-            window.mui.alert(body.msg, ' ')
-          }
-        }, function (response) {
-          var body = response.body
-
-          window.mui.alert(body.msg, ' ')
-        })
-      }
+      vm.getPaperDetail()
+      vm.initListener()
     },
-    onChange: function (e, item) {
+    destroyed () {
       var vm = this
 
-      if (vm.remainTime === 0) {
+      clearInterval(vm.timerId)
+
+      if (vm.remainTime === 0 || vm.my_quiz_id === '0') {
         return
       }
 
-      if (e.target.files && e.target.files[0]) {
-        var formData = new FormData()
-        formData.append('file', e.target.files[0])
-        vm.$http.post('/api/common/uploadFile?token=' + vm.$store.state.token, formData).then(function (response) {
-          item.pic = response.body.data.url
-        }, function (response) {
-          var body = response.body
+      var answers = []
+      for (var i = 0; i < vm.paper_questions.length; i++) {
+        answers.push({text: vm.paper_questions[i].text, pic: vm.paper_questions[i].pic})
+      }
+      vm.$http.post('/api/common/setMyAnswer', {
+        my_quiz_id: vm.my_quiz_id,
+        answers: answers,
+        finish: 0
+      }).then(function (ret) {
+        if (ret.data.ok === 0) {
+          clearInterval(vm.timerId)
+        } else {
+          Message({message: ret.data.msg, center: true})
+        }
+      }, function (ret) {
+        Message({message: ret.data.msg, center: true})
+      })
+    },
+    methods: {
+      getPaperDetail () {
+        const vm = this
 
-          window.mui.alert(body.msg, ' ')
+        vm.$http.get('/api/common/getPaperDetail', {
+          params: {
+            collections: vm.getSubjectCollections(vm.$route.params.subject_id),
+            question_ids: vm.$route.params.question_ids
+          }
+        }).then(function (ret) {
+          for (var i = 0, l = ret.data.data.items.length; i < l; i++) {
+            ret.data.data.items[i].text = ''
+            ret.data.data.items[i].pic = ''
+          }
+
+          if (ret.data.ok === 0) {
+            vm.paper_questions = ret.data.data.items
+            vm.show_loading = false
+
+            if (vm.my_quiz_id !== '0') {
+              vm.$http.get('/api/common/getMyAnswer', {
+                params: {
+                  my_quiz_id: vm.my_quiz_id
+                }
+              }).then(function (ret) {
+                if (ret.data.ok === 0) {
+                  var answers = ret.data.data.answers
+                  for (var i = 0; i < answers.length; i++) {
+                    vm.paper_questions[i].text = answers[i].text
+                    vm.paper_questions[i].pic = answers[i].pic
+                  }
+                } else {
+                  Message({message: ret.data.msg, center: true})
+                }
+              }, function (ret) {
+                Message({message: ret.data.msg, center: true})
+              })
+            }
+          } else {
+            Message({message: ret.data.msg, center: true})
+          }
+        }, function (ret) {
+          Message({message: ret.data.msg, center: true})
         })
+      },
+      initListener () {
+        const vm = this
+
+        if (vm.my_quiz_id !== '0') {
+          if (vm.remainTime !== 0) {
+            vm.timerId = setInterval(function () {
+              vm.$http.post('/api/common/decreaseQuizTime', {
+                my_quiz_id: vm.my_quiz_id
+              }).then(function (ret) {
+                if (ret.data.ok === 0) {
+                  vm.remainTime = ret.data.data.remainTime
+                  clearInterval(vm.timerId)
+                } else {
+                  Message({message: ret.data.msg, center: true})
+                }
+              }, function (ret) {
+                Message({message: ret.data.msg, center: true})
+              })
+            }, 60000)
+          }
+        }
+      },
+      toggleAnswerAnalyse (item) {
+        item.showAnswerResolveContent = !item.showAnswerResolveContent
+      },
+      getSubjectCollections (subjectId) {
+        var collectionsNames = {
+          '0': 'Mathematics',
+          '1': 'English',
+          '2': 'Physics',
+          '3': 'Chemistry',
+          '4': 'Chinese',
+          '5': 'Biology',
+          '6': 'History',
+          '7': 'Geography',
+          '8': 'Politics',
+          '9': 'ScienceSynthesis',
+          '10': 'LiberalArtsSynthesis',
+          '11': 'General',
+          '12': 'Other'
+        }
+
+        return collectionsNames[subjectId]
+      },
+      startMyQuiz () {
+        var vm = this
+
+        var length = vm.$route.params.question_ids.split(',').length
+        if (vm.my_quiz_id === '0') {
+          vm.$http.post('/api/common/startMyQuiz', {
+            paper_id: vm.$route.params._id,
+            name: vm.$route.params.name,
+            subject_id: vm.$route.params.subject_id,
+            stid: vm.$route.params.question_ids,
+            length: length,
+            answers: []
+          }).then(function (ret) {
+            vm.my_quiz_id = ret.data.data.my_quiz_id
+
+            vm.remainTime = length * 5 * 60 * 1000
+
+            if (ret.data.ok === 0) {
+              vm.timerId = setInterval(function () {
+                vm.$http.post('/api/common/decreaseQuizTime', {
+                  my_quiz_id: vm.my_quiz_id
+                }).then(function (ret) {
+                  if (ret.data.ok === 0) {
+                    vm.remainTime = ret.data.data.remainTime
+                    if (vm.remainTime === 5 * 60 * 1000) {
+                      Message({message: '还剩5分钟就到交卷时间，请输入或上传答案！', center: true})
+                    }
+                    if (vm.remainTime === 0) {
+                      clearInterval(vm.timerId)
+                      Message({message: '时间已到，系统自动交卷！', center: true})
+                      vm.$router.replace('/quiz/quiz-paper-detail/' + vm.$route.params._id + '/' + vm.$route.params.name + '/' + vm.$route.params.subject_id + '/' + vm.my_quiz_id + '/0/' + vm.$route.params.question_ids)
+                    }
+                  } else {
+                    Message({message: ret.data.msg, center: true})
+                  }
+                }, function (ret) {
+                  Message({message: ret.data.msg, center: true})
+                })
+              }, 60000)
+            } else {
+              Message({message: ret.data.msg, center: true})
+            }
+          }, function (ret) {
+            Message({message: ret.data.msg, center: true})
+          })
+        } else {
+          var answers = []
+          for (var i = 0; i < length; i++) {
+            answers.push({text: vm.paper_questions[i].text, pic: vm.paper_questions[i].pic})
+          }
+          vm.$http.post('/api/common/setMyAnswer', {
+            my_quiz_id: vm.my_quiz_id,
+            answers: answers,
+            finish: 1
+          }).then(function (ret) {
+            if (ret.data.ok === 0) {
+              vm.remainTime = 0
+              clearInterval(vm.timerId)
+
+              vm.$router.replace('/quiz/quiz-paper-detail/' + vm.$route.params._id + '/' + vm.$route.params.name + '/' + vm.$route.params.subject_id + '/' + vm.my_quiz_id + '/0/' + vm.$route.params.question_ids)
+            } else {
+              Message({message: ret.data.msg, center: true})
+            }
+          }, function (ret) {
+            Message({message: ret.data.msg, center: true})
+          })
+        }
+      },
+      onChange (e, item) {
+        var vm = this
+
+        if (vm.remainTime === 0) {
+          return
+        }
+
+        if (e.target.files && e.target.files[0]) {
+          var formData = new FormData()
+          formData.append('file', e.target.files[0])
+          vm.$http.post('/api/common/uploadFile', formData).then(function (ret) {
+            item.pic = ret.data.data.url
+          }, function (ret) {
+            Message({message: ret.data.msg, center: true})
+          })
+        }
       }
     }
-  },
-  destroyed () {
-    var vm = this
-
-    clearInterval(vm.timerId)
-
-    if (vm.remainTime === 0 || vm.my_quiz_id === '0') {
-      return
-    }
-
-    var answers = []
-    for (var i = 0; i < vm.$store.state.paper_questions.length; i++) {
-      answers.push({text: vm.$store.state.paper_questions[i].text, pic: vm.$store.state.paper_questions[i].pic})
-    }
-    vm.$http.post('/api/common/setMyAnswer?token=' + vm.$store.state.token, {
-      my_quiz_id: vm.my_quiz_id,
-      answers: answers,
-      finish: 0
-    }).then(function (response) {
-      var body = response.body
-
-      if (body.ok === 0) {
-        clearInterval(vm.timerId)
-      } else {
-        window.mui.alert(body.msg, ' ')
-      }
-    }, function (response) {
-      var body = response.body
-
-      window.mui.alert(body.msg, ' ')
-    })
   }
-}
 </script>

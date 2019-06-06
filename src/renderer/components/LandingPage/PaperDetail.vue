@@ -114,7 +114,7 @@
 </style>
 
 <script>
-  import { ipcRenderer } from 'electron'
+  // import { ipcRenderer } from 'electron'
   import { Message } from 'element-ui'
 
   export default {
@@ -181,7 +181,9 @@
         var vm = this
 
         if (!localStorage.getItem('token')) {
-          ipcRenderer.send('logout')
+          if (!process.env.IS_WEB) {
+            require('electron').ipcRenderer.send('logout')
+          }
           this.$router.push('/')
           return
         }
@@ -200,7 +202,9 @@
         var vm = this
 
         if (!localStorage.getItem('token')) {
-          ipcRenderer.send('logout')
+          if (!process.env.IS_WEB) {
+            require('electron').ipcRenderer.send('logout')
+          }
           this.$router.push('/')
           return
         }
