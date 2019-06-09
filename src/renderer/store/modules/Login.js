@@ -1,6 +1,7 @@
 const state = {
   account: '',
   password: '',
+  verifycode: '',
   userInfo: {},
   my_papers: [],
   my_paper_ids: [],
@@ -17,8 +18,19 @@ const mutations = {
   updatePassword (state, payload) {
     state.password = payload.password
   },
+  updateVerifycode (state, payload) {
+    state.verifycode = payload.verifycode
+  },
   updateUserInfo (state, payload) {
     state.userInfo = payload.userInfo
+    localStorage.setItem('avatar', payload.userInfo.avatar)
+  },
+  updateUserInfoParams (state, payload) {
+    state.userInfo.avatar = payload.avatar
+    state.userInfo.nickname = payload.nickname
+    state.userInfo.mySemesterId = payload.mySemesterId
+    state.userInfo.gradeId = payload.gradeId
+    localStorage.setItem('avatar', payload.avatar)
   },
   updateMyPapers (state, payload) {
     state.my_papers = payload.my_papers

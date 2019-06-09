@@ -1,8 +1,7 @@
 <template>
   <div class="c-my">
-    my
-    <div class="tc bottom">
-      <button class="pure-button pure-button-primary logout" @click="doLogout">退出登陆</button>
+    <div class="result-container">
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -11,33 +10,19 @@
   .c-my {
     position: relative;
     height: 100%;
-    .bottom {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 50px;
-      line-height: 50px;
+    .result-container {
+      height: 100%;
+      margin: 0 auto;
+      overflow: auto;
     }
   }
 </style>
 
 <script>
-  // import { ipcRenderer } from 'electron'
-
   export default {
-    name: 'my',
+    name: 'My',
     data () {
       return {
-      }
-    },
-    methods: {
-      doLogout () {
-        localStorage.setItem('token', '')
-        if (!process.env.IS_WEB) {
-          require('electron').ipcRenderer.send('logout')
-        }
-        this.$router.push('/')
       }
     }
   }

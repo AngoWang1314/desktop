@@ -7,6 +7,7 @@
     </div>
     <div class="list-container">
       <div class="list-item" v-for="item in paper_questions" v-bind:key="item._id">
+        <div class="btn" @click="addToMyWrongQuestion(item)" v-show="remainTime === 0">添加到错题本</div>
         <div class="content" v-html="item.content"></div>
         <div class="options">
           <div class="option" v-if="item.option1" v-html="item.option1"></div>
@@ -85,12 +86,28 @@
     }
     .list-container {
       .list-item {
+        position: relative;
         margin-top: 10px;
         padding: 5px;
         border: 1px solid #d4d4d4;
         font-size: 15px;
         color: #000;
         overflow: hidden;
+        .btn {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 110px;
+          text-align: center;
+          height: 40px;
+          line-height: 40px;
+          color: #007aff;
+          cursor: pointer;
+          border: 1px solid #ccc;
+          border-top: 0;
+          border-right: 0;
+          background-color: #fff;
+        }
         .content {
           margin-bottom: 8px;
           text-align: justify;
@@ -394,6 +411,22 @@
             Message({message: ret.data.msg, center: true})
           })
         }
+      },
+      addToMyWrongQuestion (item) {
+        const vm = this
+
+        vm.$http.post('/api/common/addToMyWrongQuestion', {
+          subject_id: vm.$route.params.subject_id,
+          question_id: item._id
+        }).then(function (ret) {
+          if (ret.data.ok === 0) {
+            Message({message: '添加成功！', center: true})
+          } else {
+            Message({message: ret.data.msg, center: true})
+          }
+        }, function (ret) {
+          Message({message: ret.data.msg, center: true})
+        })
       }
     }
   }

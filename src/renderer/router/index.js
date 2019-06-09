@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import { ipcRenderer } from 'electron'
 import axios from 'axios'
 
 Vue.use(Router)
@@ -15,7 +14,11 @@ axios.interceptors.request.use(
     // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加
     var token = localStorage.getItem('token') || ''
     if (token) {
-      config.url += '?token=' + token
+      if (config.url.indexOf('?') > -1) {
+        config.url += '&token=' + token
+      } else {
+        config.url += '?token=' + token
+      }
     }
     return config
   },
@@ -53,22 +56,22 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'login-page',
+      name: 'LoginPage',
       component: require('@/components/LoginPage').default
     },
     {
       path: '/landing-page',
-      name: 'landing-page',
+      name: 'LandingPage',
       component: require('@/components/LandingPage').default,
       children: [
         {
           path: '/vdo',
-          name: 'vdo',
+          name: 'Vdo',
           component: require('@/components/LandingPage/Vdo').default
         },
         {
           path: '/paper',
-          name: 'paper',
+          name: 'Paper',
           component: require('@/components/LandingPage/Paper').default,
           children: [
             {
@@ -97,7 +100,7 @@ export default new Router({
         },
         {
           path: '/quiz',
-          name: 'quiz',
+          name: 'Quiz',
           component: require('@/components/LandingPage/Quiz').default,
           children: [
             {
@@ -134,18 +137,74 @@ export default new Router({
         },
         {
           path: '/courseware',
-          name: 'courseware',
-          component: require('@/components/LandingPage/Courseware').default
+          name: 'Courseware',
+          component: require('@/components/LandingPage/Courseware').default,
+          children: [
+            {
+              path: 'courseware-list',
+              name: 'CoursewareList',
+              component: require('@/components/LandingPage/CoursewareList').default
+            },
+            {
+              path: 'courseware-detail/:real_url',
+              name: 'CoursewareDetail',
+              component: require('@/components/LandingPage/CoursewareDetail').default
+            }
+          ]
         },
         {
           path: '/ask',
-          name: 'ask',
-          component: require('@/components/LandingPage/Ask').default
+          name: 'Ask',
+          component: require('@/components/LandingPage/Ask').default,
+          children: [
+            {
+              path: 'ask-list',
+              name: 'AskList',
+              component: require('@/components/LandingPage/AskList').default
+            },
+            {
+              path: 'ask-detail/:_id',
+              name: 'AskDetail',
+              component: require('@/components/LandingPage/AskDetail').default
+            }
+          ]
         },
         {
           path: '/my',
-          name: 'my',
-          component: require('@/components/LandingPage/My').default
+          name: 'My',
+          component: require('@/components/LandingPage/My').default,
+          children: [
+            {
+              path: 'my-list',
+              name: 'MyList',
+              component: require('@/components/LandingPage/MyList').default
+            },
+            {
+              path: 'my-edit-userinfo/:avatar/:nickname/:mySemesterId/:gradeId',
+              name: 'MyEditUserinfo',
+              component: require('@/components/LandingPage/MyEditUserinfo').default
+            },
+            {
+              path: 'my-collect-video',
+              name: 'MyCollectVideo',
+              component: require('@/components/LandingPage/MyCollectVideo').default
+            },
+            {
+              path: 'my-wrong-question',
+              name: 'MyWrongQuestion',
+              component: require('@/components/LandingPage/MyWrongQuestion').default
+            },
+            {
+              path: 'my-ask',
+              name: 'MyAsk',
+              component: require('@/components/LandingPage/MyAsk').default
+            },
+            {
+              path: 'my-about-software',
+              name: 'MyAboutSoftware',
+              component: require('@/components/LandingPage/MyAboutSoftware').default
+            }
+          ]
         }
       ]
     }

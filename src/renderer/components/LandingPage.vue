@@ -10,13 +10,13 @@
       <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/quiz') === 0}" @click="activeItem('/quiz/quiz-question-basket')">
         <i class="iconfont icon-ceshi"></i><span>测评</span>
       </div>
-      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/courseware') === 0}" @click="activeItem('/courseware')">
+      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/courseware') === 0}" @click="activeItem('/courseware/courseware-list')">
         <i class="iconfont icon-kejian"></i><span>课件</span>
       </div>
-      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/ask') === 0}" @click="activeItem('/ask')">
+      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/ask') === 0}" @click="activeItem('/ask/ask-list')">
         <i class="iconfont icon-askoutline01"></i><span>提问</span>
       </div>
-      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/my') === 0}" @click="activeItem('/my')">
+      <div :class="{'item': true, 'active': $router.history.current.fullPath.indexOf('/my') === 0}" @click="activeItem('/my/my-list')">
         <i class="iconfont icon-wode"></i><span>我的</span>
       </div>
     </div>
@@ -73,7 +73,7 @@
 
 <script>
   export default {
-    name: 'landing-page',
+    name: 'LandingPage',
     data () {
       return {
       }

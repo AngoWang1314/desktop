@@ -1,5 +1,5 @@
 <template>
-  <div class="c-vdo">
+  <div class="c-courseware-list">
     <div class="search-condition-container">
       <div class="row">
         <select v-model="semesterId">
@@ -14,16 +14,23 @@
           <option value="">请选择学科</option>
           <option :value="item.subjectId" v-for="(item, index) in indexes.subject" :key="index">{{ item.subjectName }}</option>
         </select>
+        <select v-model="registerId">
+          <option value="">请选择册次</option>
+          <option :value="item.registerId" v-for="(item, index) in indexes.register" :key="index">{{ item.registerName }}</option>
+        </select>
         <div class="list">
-          <input type="text" placeholder="请输入视频名称搜索" v-model="title" @keypress="enterSearch"><button class="pure-button pure-button-primary" @click="clickSearch">搜索</button>
+          <input type="text" placeholder="请输入课件名称搜索" v-model="title" @keypress="enterSearch"><button class="pure-button pure-button-primary" @click="clickSearch">搜索</button>
         </div>
       </div>
     </div>
     <div class="result-container">
       <div class="pure-g">
-        <div class="pure-u-1-6" v-for="(item, index) in list" :key="index" :title="item.title"  @click="play(item)">
+        <div class="pure-u-1-6" v-for="(item, index) in list" :key="index" :title="item.title"  @click="goToDetail(item)">
           <div class="item">
-            <div class="img-container" :style="{'background-image': 'url(' + item.image_urls + ')'}"></div>
+            <div class="img-container">
+              <div class="label">{{ item.semesterName + '/' + item.gradeName + '/' + item.subjectName + '/' + item.registerName }}</div>
+              <div class="summary">{{ item.summary }}</div>
+            </div>
             <div class="description">{{ item.title }}</div>
           </div>
         </div>
@@ -38,7 +45,7 @@
 </template>
 
 <style scoped lang="less">
-  .c-vdo {
+  .c-courseware-list {
     position: relative;
     height: 100%;
     .search-condition-container {
@@ -108,6 +115,17 @@
           background-size: cover;
           background-position: center;
           border: 1px solid #d8d8d8;
+          .label {
+            margin-top: 50px;
+            color: #409eff;
+            font-weight: bold;
+          }
+          .summary {
+            margin-top: 30px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
           @media screen and (max-width: 1390px) {
             height: 145px;
           }
@@ -149,19 +167,20 @@
   import { Message } from 'element-ui'
 
   export default {
-    name: 'Vdo',
+    name: 'CoursewareList',
     data () {
+      const vm = this
+
       return {
-        semesterId: '',
-        gradeId: '',
-        subjectId: '',
-        title: '',
+        semesterId: vm.$store.state.Courseware.params.semesterId,
+        gradeId: vm.$store.state.Courseware.params.gradeId,
+        subjectId: vm.$store.state.Courseware.params.subjectId,
+        registerId: vm.$store.state.Courseware.params.registerId,
+        title: vm.$store.state.Courseware.params.title,
         perpage: 18,
-        page: 1,
+        page: vm.$store.state.Courseware.params.page,
         list: [],
-        total: 0,
-        our_base_url: 'http://www.xuebabiji.club/player/desktop.html',
-        iframe_src: ''
+        total: 0
       }
     },
     computed: {
@@ -171,7 +190,7 @@
       ])
     },
     created () {
-      this.clickSearch()
+      this.doSearch()
     },
     methods: {
       enterSearch (e) {
@@ -186,11 +205,23 @@
       doSearch () {
         const vm = this
 
-        vm.$http.get('/api/video/getVideoList', {
+        vm.$store.commit('Courseware/updateParams', {
+          'params': {
+            semesterId: vm.semesterId,
+            gradeId: vm.gradeId,
+            subjectId: vm.subjectId,
+            registerId: vm.registerId,
+            title: vm.title,
+            page: vm.page
+          }
+        })
+
+        vm.$http.get('/api/common/getCoursewareList', {
           params: {
             semesterId: vm.semesterId,
             gradeId: vm.gradeId,
             subjectId: vm.subjectId,
+            registerId: vm.registerId,
             title: vm.title,
             perpage: vm.perpage,
             page: vm.page
@@ -206,12 +237,8 @@
           Message({message: ret.data.msg, center: true})
         })
       },
-      play (item) {
-        const vm = this
-        vm.iframe_src = vm.our_base_url + '?token=' + localStorage.getItem('token') + '&_id=' + item._id
-        if (!process.env.IS_WEB) {
-          require('electron').ipcRenderer.send('open-window', vm.iframe_src)
-        }
+      goToDetail (item) {
+        this.$router.push('/courseware/courseware-detail/' + encodeURIComponent(item.real_url))
       },
       prev () {
         if (this.page >= 2) {

@@ -55,10 +55,8 @@
 </style>
 
 <script>
-  // import { ipcRenderer } from 'electron'
-
   export default {
-    name: 'title-bar',
+    name: 'TitleBar',
     data () {
       return {
         'appName': '学霸笔迹',

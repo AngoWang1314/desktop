@@ -41,7 +41,7 @@
 
 <script>
   export default {
-    name: 'quiz',
+    name: 'Quiz',
     data () {
       return {
         activeTabId: 1,

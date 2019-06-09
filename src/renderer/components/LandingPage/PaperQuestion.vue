@@ -86,7 +86,6 @@
 </style>
 
 <script>
-  // import { ipcRenderer } from 'electron'
   import { mapState } from 'vuex'
   import { Message } from 'element-ui'
 

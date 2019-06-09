@@ -114,7 +114,6 @@
 </style>
 
 <script>
-  // import { ipcRenderer } from 'electron'
   import { Message } from 'element-ui'
 
   export default {

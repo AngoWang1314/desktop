@@ -8,7 +8,7 @@
 <style>
   @import '~purecss/build/pure.css';
   @import '~element-ui/lib/theme-chalk/index.css';
-  @import 'https://at.alicdn.com/t/font_919985_5hkdvyny9yy.css';
+  @import 'https://at.alicdn.com/t/font_919985_sqwm04p4eo.css';
 
   html {
     height: 100vh;
@@ -71,6 +71,9 @@
   .icon-zhengzhi:before { content: "\e655"; }
   .icon-dili:before { content: "\e60a"; }
   .icon-lishi:before { content: "\e602"; }
+  .icon-guankan:before { content: "\e68d"; }
+  .icon-pinglun:before { content: "\E7F5"; }
+  .icon-bianji:before { content: "\e695"; }
 
   ::-webkit-scrollbar {
     width: 12px;
@@ -87,12 +90,11 @@
 </style>
 
 <script>
-  // import { ipcRenderer, webFrame } from 'electron'
   import TitleBar from '@/components/TitleBar'
   import { Message } from 'element-ui'
 
   export default {
-    name: 'app',
+    name: 'App',
     components: {
       TitleBar
     },
