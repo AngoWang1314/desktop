@@ -60,7 +60,7 @@
         </div>
       </div>
     </div>
-    <div class="button-container">
+    <div class="button-container" v-show="!IS_WEB">
       <button type="button" class="pure-button" @click="doLogout()">退出</button>
     </div>
   </div>
@@ -232,7 +232,8 @@
           '9': '三年级',
           '10': '二年级',
           '11': '一年级'
-        }
+        },
+        'IS_WEB': process.env.IS_WEB
       }
     },
     methods: {
@@ -240,8 +241,10 @@
         this.$router.push(path)
       },
       doLogout () {
-        localStorage.setItem('token', '')
-        if (!process.env.IS_WEB) {
+        const vm = this
+
+        localStorage.removeItem('token')
+        if (!vm.IS_WEB) {
           require('electron').ipcRenderer.send('logout')
         }
         this.$router.push('/')

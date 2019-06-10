@@ -8,7 +8,7 @@
 <style>
   @import '~purecss/build/pure.css';
   @import '~element-ui/lib/theme-chalk/index.css';
-  @import 'https://at.alicdn.com/t/font_919985_sqwm04p4eo.css';
+  @import 'https://at.alicdn.com/t/font_919985_yq7p63k0tcc.css';
 
   html {
     height: 100vh;
@@ -90,6 +90,10 @@
   }
   ::-webkit-scrollbar-track {
     background-color: #e2e2e2;
+  }
+
+  .is-web .c-login-page {
+    border: 1px solid #ccc;
   }
 </style>
 

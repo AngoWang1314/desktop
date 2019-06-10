@@ -65,6 +65,12 @@
 
 <style scoped lang="less">
   .c-login-page {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 440px;
+    margin: -178px 0 0 -150px;
     .avatar {
       padding: 30px 0;
       border-top: 1px solid #409eff;

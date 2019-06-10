@@ -1,13 +1,15 @@
 <template>
-  <div class="c-title-bar">
-    <div class="app-name">{{ appName }}</div>
+  <div class="c-title-bar" v-show="$route.name !== 'LoginPage' || !IS_WEB">
+    <div :class="{'app-name': true, 'right-border': $route.name !== 'LoginPage'}">{{ appName }}</div>
     <div class="operation">
-      <div class="ib minimize" @click="minWindow()">
+      <div class="ib minimize" @click="minWindow" v-show="!IS_WEB">
         <i class="iconfont icon-zuixiaohua"></i>
-      </div><div class="ib maximize-restore" v-show="$route.name !== 'LoginPage'" @click="toggleWindow()">
+      </div><div class="ib maximize-restore" v-show="$route.name !== 'LoginPage' && !IS_WEB" @click="toggleWindow">
         <i :class="{'iconfont': true, 'icon-zuidahua': !is_fullscreen, 'icon-zuidahua2': is_fullscreen}"></i>
-      </div><div class="ib close" @click="closeWindow()">
+      </div><div class="ib close" @click="closeWindow" v-show="!IS_WEB">
         <i class="iconfont icon-close"></i>
+      </div><div title="退出登录" class="ib logout" @click="doLogout" v-show="IS_WEB">
+        <i class="iconfont icon-iconfontguanji"></i>
       </div>
     </div>
   </div>
@@ -25,13 +27,15 @@
       float: left;
       width: 75px;
       margin-left: 10px;
-      border-right: 1px solid #3a98f9;
       -webkit-app-region: no-drag;
+    }
+    .right-border {
+      border-right: 1px solid #3a98f9;
     }
     .operation {
       margin-left: 74px;
       text-align: right;
-      .minimize, .maximize-restore, .close {
+      .minimize, .maximize-restore, .close, .logout {
         position: relative;
         z-index: 1000;
         width: 42px;
@@ -40,7 +44,7 @@
         cursor: pointer;
         -webkit-app-region: no-drag;
       }
-      .minimize, .maximize-restore {
+      .minimize, .maximize-restore, .logout {
         &:hover {
           background-color: #6eb5ff;
         }
@@ -61,38 +65,54 @@
       return {
         'appName': '学霸笔迹',
         'is_fullscreen': false,
-        'listener': null
+        'listener': null,
+        'IS_WEB': process.env.IS_WEB
       }
     },
     created () {
       var vm = this
-      if (!process.env.IS_WEB) {
+
+      if (vm.IS_WEB) {
         vm.listener = require('electron').ipcRenderer.on('toggle-window', function () {
           vm.is_fullscreen = !vm.is_fullscreen
         })
       }
     },
+    destroyed () {
+      var vm = this
+
+      if (vm.IS_WEB) {
+        require('electron').ipcRenderer.removeListener(vm.listener)
+      }
+    },
     methods: {
       minWindow () {
-        if (!process.env.IS_WEB) {
+        var vm = this
+
+        if (vm.IS_WEB) {
           require('electron').ipcRenderer.send('min-window')
         }
       },
       toggleWindow () {
-        if (!process.env.IS_WEB) {
+        var vm = this
+
+        if (vm.IS_WEB) {
           require('electron').ipcRenderer.send('toggle-window')
         }
       },
       closeWindow () {
-        if (!process.env.IS_WEB) {
+        var vm = this
+
+        if (vm.IS_WEB) {
           require('electron').ipcRenderer.send('close-window')
         }
-      }
-    },
-    destroyed () {
-      var vm = this
-      if (!process.env.IS_WEB) {
-        require('electron').ipcRenderer.removeListener(vm.listener)
+      },
+      doLogout () {
+        localStorage.removeItem('token')
+        if (!process.env.IS_WEB) {
+          require('electron').ipcRenderer.send('logout')
+        }
+        this.$router.push('/')
       }
     }
   }
