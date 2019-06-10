@@ -12,11 +12,6 @@
           <span class="publish-time">{{item.createdAt | formatDate}}发布</span>
         </div>
       </div>
-      <div class="tc pagination" v-show="total > 0">
-        <span :class="{'disabled': page < 2}" @click="prev">上一页</span>
-        {{ page }}/{{ Math.ceil(total / perpage) }}
-        <span :class="{'disabled': total / perpage <= page}" @click="next">下一页</span>
-      </div>
     </div>
     <div class="flot" @click="showAddPanel()" v-show="!adding">问</div>
     <div :class="{'bottom': true, 'show': adding, 'hide': !adding}">
@@ -108,7 +103,7 @@
     }
     .bottom {
       position: fixed;
-      right: 11px;
+      right: 0px;
       bottom: 0px;
       left: 85px;
       max-height: 100%;
@@ -196,9 +191,7 @@
         total: 0,
         content: '',
         pic: '',
-        adding: false,
-        page: 1,
-        perpage: 18
+        adding: false
       }
     },
     filters: {
@@ -219,12 +212,7 @@
       doSearch () {
         const vm = this
 
-        vm.$http.get('/api/common/getProblem', {
-          params: {
-            page: vm.page,
-            perpage: vm.perpage
-          }
-        }).then(function (ret) {
+        vm.$http.get('/api/common/getProblem').then(function (ret) {
           if (ret.data.ok === 0) {
             vm.asks = ret.data.data.items
             vm.total = ret.data.data.asks_total
@@ -234,18 +222,6 @@
         }, function (ret) {
           Message({message: ret.data.msg, center: true})
         })
-      },
-      prev () {
-        if (this.page >= 2) {
-          this.page--
-          this.doSearch()
-        }
-      },
-      next () {
-        if (Math.ceil(this.total / this.perpage) > this.page) {
-          this.page++
-          this.doSearch()
-        }
       },
       removePic () {
         var vm = this

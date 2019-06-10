@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="tip" v-if="my_wrong_questions.length === 0">
-      您该错题本空空如也，非常棒哦
+      您该错题本空空如也，非常棒！<span class="jump" @click="$router.back(-1)">返回列表</span>
     </div>
   </div>
 </template>
@@ -160,7 +160,7 @@
     name: 'MyWrongQuestion',
     data () {
       return {
-        activeSubjectId: '0',
+        activeSubjectId: '4',
         name: '',
         my_wrong_questions: []
       }

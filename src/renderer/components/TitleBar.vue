@@ -4,7 +4,7 @@
     <div class="operation">
       <div class="ib minimize" @click="minWindow()">
         <i class="iconfont icon-zuixiaohua"></i>
-      </div><div class="ib maximize-restore" v-show="$route.name !== 'login-page'" @click="toggleWindow()">
+      </div><div class="ib maximize-restore" v-show="$route.name !== 'LoginPage'" @click="toggleWindow()">
         <i :class="{'iconfont': true, 'icon-zuidahua': !is_fullscreen, 'icon-zuidahua2': is_fullscreen}"></i>
       </div><div class="ib close" @click="closeWindow()">
         <i class="iconfont icon-close"></i>

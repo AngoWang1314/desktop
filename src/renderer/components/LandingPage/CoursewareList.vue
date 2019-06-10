@@ -8,7 +8,7 @@
         </select>
         <select v-model="gradeId">
           <option value="">请选择年级</option>
-          <option :value="item.gradeId" v-for="(item, index) in grade" :key="index">{{ item.gradeName }}</option>
+          <option :value="item.gradeId" v-for="(item, index) in indexes.grade" :key="index">{{ item.gradeName }}</option>
         </select>
         <select v-model="subjectId">
           <option value="">请选择学科</option>
@@ -149,7 +149,10 @@
       }
     }
     .pagination {
-      margin: 30px 0px;
+      margin: 55px 0px;
+      @media screen and (max-width: 1390px) {
+        margin: 30px 0px;
+      }
       span {
         margin: 0 10px;
         cursor: pointer;

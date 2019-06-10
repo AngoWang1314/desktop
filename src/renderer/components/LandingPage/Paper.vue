@@ -6,40 +6,40 @@
           <option :value="'paper'" :selected="type === 'paper'">试卷</option>
           <option :value="'question'" :selected="type === 'question'">试题</option>
         </select>
-        <select v-model="semesterId" @change="updateParams">
+        <select v-model="semesterId">
           <option value="">请选择学段</option>
           <option :value="item.semesterId" v-for="(item, index) in indexes.semester" :key="index">{{ item.semesterName }}</option>
         </select>
-        <select v-model="subjectId" @change="updateParams">
-          <option value="">请选择学科</option>
+        <select v-model="subjectId">
+          <option value="" v-show="type === 'paper'">请选择学科</option>
           <option :value="item.subjectId" v-for="(item, index) in indexes.subject" :key="index">{{ item.subjectName }}</option>
         </select>
-        <select v-model="versionId" @change="updateParams">
+        <select v-model="versionId">
           <option value="">请选择教材</option>
           <option :value="item.versionId" v-for="(item, index) in indexes.version" :key="index">{{ item.versionName }}</option>
         </select>
-        <select v-model="examtypeId" @change="updateParams" v-show="type === 'paper'">
+        <select v-model="examtypeId" v-show="type === 'paper'">
           <option value="">请选择类别</option>
           <option :value="item.examtypeId" v-for="(item, index) in indexes.examtype" :key="index">{{ item.examtypeName }}</option>
         </select>
-        <select v-model="creditLineId" @change="updateParams" v-show="type === 'question'">
+        <select v-model="creditLineId" v-show="type === 'question'">
           <option value="">请选择类别</option>
           <option :value="item.creditLineId" v-for="(item, index) in indexes.creditLine" :key="index">{{ item.creditLineName }}</option>
         </select>
-        <select v-model="typeId" @change="updateParams" v-show="type === 'question'">
+        <select v-model="typeId" v-show="type === 'question'">
           <option value="">请选择题型</option>
           <option :value="item.typeId" v-for="(item, index) in indexes.type" :key="index">{{ item.typeName }}</option>
         </select>
-        <select v-model="areaId" @change="updateParams">
+        <select v-model="areaId">
           <option value="">请选择地区</option>
           <option :value="item.areaId" v-for="(item, index) in indexes.area" :key="index">{{ item.areaName }}</option>
         </select>
-        <select v-model="yearId" @change="updateParams">
+        <select v-model="yearId">
           <option value="">请选择年份</option>
-          <option :value="item.yearId" v-for="(item, index) in [].concat(indexes.year).reverse()" :key="index">{{ item.yearName }}</option>
+          <option :value="item.yearId" v-for="(item, index) in indexes.year" :key="index">{{ item.yearName }}</option>
         </select>
         <div class="list">
-          <input type="text" placeholder="请输入关键词进行搜索" v-model="keyword" @change="updateParams" @keypress="enterSearch"><button class="pure-button pure-button-primary" @click="clickSearch">搜索</button>
+          <input type="text" placeholder="请输入关键词进行搜索" v-model="keyword" @keypress="enterSearch"><button class="pure-button pure-button-primary" @click="clickSearch">搜索</button>
         </div>
       </div>
     </div>
@@ -165,6 +165,10 @@
 
         vm.type = e.target.value
         vm.$store.commit('Paper/updateParamsType', {'type': vm.type})
+
+        if (vm.type === 'question' && !vm.subjectId) {
+          vm.subjectId = '0'
+        }
       },
       enterSearch (e) {
         if (e.keyCode === 13) {
@@ -173,24 +177,6 @@
       },
       clickSearch () {
         this.doSearch()
-      },
-      updateParams () {
-        const vm = this
-
-        vm.$store.commit('Paper/updateParams', {
-          'params': {
-            type: vm.type,
-            semesterId: vm.semesterId,
-            subjectId: vm.subjectId,
-            versionId: vm.versionId,
-            examtypeId: vm.examtypeId,
-            creditLineId: vm.creditLineId,
-            typeId: vm.typeId,
-            areaId: vm.areaId,
-            yearId: vm.yearId,
-            keyword: vm.keyword
-          }
-        })
       },
       doSearch () {
         const vm = this

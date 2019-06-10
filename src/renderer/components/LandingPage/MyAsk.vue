@@ -104,7 +104,7 @@
     }
     .bottom {
       position: fixed;
-      right: 11px;
+      right: 0px;
       bottom: 0px;
       left: 85px;
       max-height: 100%;

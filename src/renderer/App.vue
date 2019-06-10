@@ -1,5 +1,5 @@
 <template>
-  <div class="c-app">
+  <div :class="{'c-app': true, 'is-web': IS_WEB}">
     <TitleBar></TitleBar>
     <router-view></router-view>
   </div>
@@ -53,11 +53,6 @@
     text-align: right;
   }
 
-  .c-app {
-    width: 100vw;
-    height: 100vh;
-  }
-
   img {
     vertical-align: middle;
   }
@@ -74,6 +69,15 @@
   .icon-guankan:before { content: "\e68d"; }
   .icon-pinglun:before { content: "\E7F5"; }
   .icon-bianji:before { content: "\e695"; }
+
+  .c-app {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .is-web {
+    min-width: 1135px;
+  }
 
   ::-webkit-scrollbar {
     width: 12px;
@@ -104,6 +108,7 @@
         require('electron').webFrame.setZoomLevel(0)
       }
       return {
+        IS_WEB: process.env.IS_WEB
       }
     },
     created () {

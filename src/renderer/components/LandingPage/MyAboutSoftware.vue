@@ -1,5 +1,6 @@
 <template>
   <div class="c-my-about-software">
+    <div class="back" @click="$router.back(-1)">返回列表</div>
     <p class="title">学霸笔迹免责申明</p>
     <p class="content">
       本网站所提供的信息，只供参考之用。
@@ -25,6 +26,17 @@
   .c-my-about-software {
     height: 100%;
     overflow: auto;
+    .back {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-bottom: 0;
+      border-left: 0;
+      cursor: pointer;
+      background-color: #fff;
+    }
     .title {
       text-align: center;
       margin: 30px;
