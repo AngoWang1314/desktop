@@ -34,12 +34,18 @@
         <span :class="{'disabled': total / perpage <= page}" @click="next">下一页</span>
       </div>
     </div>
+    <div class="layer" v-if="is_playing">
+    </div>
+    <div class="iframe-container" v-if="is_playing">
+      <iframe allowfullscreen="allowfullscreen" :src="iframe_src"></iframe>
+      <img class="close" @click="stop" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABVUlEQVRYR+2WS0rEQBRFz12BK3AbLsCRI/HTYktriw2uyYEifvADfhEEh27INVx5UA0xdHdS6UE5SE0ySdU7ue/dWxGFlwrXpwfoFfjfCtheA1YlvXRxi+1d4EfS97z9CxWwvQM8AWNJdzkQtifAOTCQ9NYJIDbZHgOXwHFbCNsj4AY4kRTPuavVDFQghpKeFx1oewA8ApOm4nFOK4CKEhdJ0o9ZEKn4fWpZQDSu1gAJYghcA3uS/kDY3kzzEq1qVTxLgemn2A6IK2BL0lcC2wDegYNFAzdLjiwFKhDbQLgiXBIrbHqYW7yTAjWI2zAKEMP52djwGS90UiDJHipMLRY5MdfrS9uwfoDtegtegVEXiGwFig5hKl7GhikNywRR0Si2fQqcFbmMbO8DD8BR25uwkhPLX8e214GVLvZKWbHcD0mXZMvdk50DuQWa3u8BegWKK/ALI6ChIZ3ISgcAAAAASUVORK5CYII=">
+    </div>
   </div>
 </template>
 
 <style scoped lang="less">
   .c-vdo {
-    position: relative;
+        position: relative;
     height: 100%;
     .search-condition-container {
       .row {
@@ -86,28 +92,33 @@
       }
     }
     .result-container {
+      height: calc(100% - 58px);
       margin: 0 auto;
       padding: 5px;
       text-align: center;
       overflow: auto;
-      @media screen and (max-width: 1390px) {
-        max-height: 650px;
-      }
       .item {
         display: inline-block;
         width: 100%;
-        height: 270px;
         padding: 5px;
         cursor: pointer;
-        @media screen and (max-width: 1390px) {
-          height: 175px;
-        }
         .img-container {
           width: 100%;
           height: 240px;
           background-size: cover;
           background-position: center;
           border: 1px solid #d8d8d8;
+          .label {
+            margin-top: 50px;
+            color: #409eff;
+            font-weight: bold;
+          }
+          .summary {
+            margin-top: 30px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
           @media screen and (max-width: 1390px) {
             height: 145px;
           }
@@ -144,6 +155,36 @@
         cursor: default;
       }
     }
+    .layer {
+      position: fixed;
+      top: 0px;
+      right: 0px;
+      bottom: 0px;
+      left: 0px;
+      z-index: 100000;
+      background: transparent;
+    }
+    .iframe-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 100001;
+      width: 1120px;
+      height: 480px;
+      margin: -240px 0 0 -610px;
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: 0px solid #ccc;
+        overflow: hidden;
+      }
+      .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+      }
+    }
   }
 </style>
 
@@ -164,7 +205,8 @@
         list: [],
         total: 0,
         our_base_url: 'http://www.xuebabiji.club/player/desktop.html',
-        iframe_src: ''
+        iframe_src: '',
+        is_playing: false
       }
     },
     computed: {
@@ -211,10 +253,16 @@
       },
       play (item) {
         const vm = this
+
         vm.iframe_src = vm.our_base_url + '?token=' + localStorage.getItem('token') + '&_id=' + item._id
         if (!process.env.IS_WEB) {
           require('electron').ipcRenderer.send('open-window', vm.iframe_src)
+        } else {
+          vm.is_playing = true
         }
+      },
+      stop () {
+        this.is_playing = false
       },
       prev () {
         if (this.page >= 2) {

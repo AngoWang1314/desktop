@@ -28,10 +28,12 @@
 
 <style scoped lang="less">
   .c-landing-page {
-    height: calc(100vh - 42px);
+    height: calc(100% - 42px);
+    min-height: 702px;
     overflow: auto;
     display: flex;
     flex-direction: row;
+    background-color: #fff;
     .sidebar {
       width: 85px;
       height: 100%;

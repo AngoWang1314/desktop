@@ -93,6 +93,7 @@
       }
     }
     .result-container {
+      height: calc(100% - 58px);
       margin: 0 auto;
       padding: 5px;
       text-align: center;
@@ -103,12 +104,8 @@
       .item {
         display: inline-block;
         width: 100%;
-        height: 270px;
         padding: 5px;
         cursor: pointer;
-        @media screen and (max-width: 1390px) {
-          height: 175px;
-        }
         .img-container {
           width: 100%;
           height: 240px;

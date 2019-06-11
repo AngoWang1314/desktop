@@ -232,7 +232,11 @@
           password: vm.$store.state.Login.password
         }).then(function (ret) {
           if (ret.data.ok === 0) {
-            vm.$router.push('/vdo')
+            if (vm.$route.query.redirect) {
+              vm.$router.push(vm.$route.query.redirect)
+            } else {
+              vm.$router.push('/vdo')
+            }
             if (!process.env.IS_WEB) {
               require('electron').ipcRenderer.send('finish-login')
             }
@@ -275,12 +279,16 @@
           password: vm.$store.state.Login.password
         }).then(function (ret) {
           if (ret.data.ok === 0) {
-            localStorage.setItem('token', ret.data.data.token)
+            if (vm.$route.query.redirect) {
+              vm.$router.push(vm.$route.query.redirect)
+            } else {
+              vm.$router.push('/vdo')
+            }
             if (!process.env.IS_WEB) {
               require('electron').ipcRenderer.send('finish-login')
             }
+            localStorage.setItem('token', ret.data.data.token)
             window.e.$emit('did-login')
-            vm.$router.push('/vdo')
           } else {
             Message({message: ret.data.msg, center: true})
           }
@@ -318,12 +326,16 @@
           password: vm.$store.state.Login.password
         }).then(function (ret) {
           if (ret.data.ok === 0) {
-            localStorage.setItem('token', ret.data.data.token)
+            if (vm.$route.query.redirect) {
+              vm.$router.push(vm.$route.query.redirect)
+            } else {
+              vm.$router.push('/vdo')
+            }
             if (!process.env.IS_WEB) {
               require('electron').ipcRenderer.send('finish-login')
             }
+            localStorage.setItem('token', ret.data.data.token)
             window.e.$emit('did-login')
-            vm.$router.push('/vdo')
           } else {
             Message({message: ret.data.msg, center: true})
           }

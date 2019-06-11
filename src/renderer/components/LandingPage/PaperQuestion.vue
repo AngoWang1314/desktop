@@ -133,7 +133,8 @@
             versionId: vm.params.versionId,
             semesterId: vm.params.semesterId,
             creditLineId: vm.params.creditLineId,
-            typeId: vm.params.typeId
+            typeId: vm.params.typeId,
+            yearId: vm.params.yearId
           }
         }).then(function (ret) {
           for (var i = 0, l = ret.data.data.items.length; i < l; i++) {

@@ -72,7 +72,7 @@
     created () {
       var vm = this
 
-      if (vm.IS_WEB) {
+      if (!process.env.IS_WEB) {
         vm.listener = require('electron').ipcRenderer.on('toggle-window', function () {
           vm.is_fullscreen = !vm.is_fullscreen
         })
@@ -81,38 +81,34 @@
     destroyed () {
       var vm = this
 
-      if (vm.IS_WEB) {
+      if (!process.env.IS_WEB) {
         require('electron').ipcRenderer.removeListener(vm.listener)
       }
     },
     methods: {
       minWindow () {
-        var vm = this
-
-        if (vm.IS_WEB) {
+        if (!process.env.IS_WEB) {
           require('electron').ipcRenderer.send('min-window')
         }
       },
       toggleWindow () {
-        var vm = this
-
-        if (vm.IS_WEB) {
+        if (!process.env.IS_WEB) {
           require('electron').ipcRenderer.send('toggle-window')
         }
       },
       closeWindow () {
-        var vm = this
-
-        if (vm.IS_WEB) {
+        if (!process.env.IS_WEB) {
           require('electron').ipcRenderer.send('close-window')
         }
       },
       doLogout () {
+        const vm = this
+
         localStorage.removeItem('token')
         if (!process.env.IS_WEB) {
           require('electron').ipcRenderer.send('logout')
         }
-        this.$router.push('/')
+        vm.$router.push('/')
       }
     }
   }

@@ -2,7 +2,7 @@ const state = {
   account: '',
   password: '',
   verifycode: '',
-  userInfo: {},
+  userInfo: localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : {},
   my_papers: [],
   my_paper_ids: [],
   my_question_ids: []
@@ -23,6 +23,7 @@ const mutations = {
   },
   updateUserInfo (state, payload) {
     state.userInfo = payload.userInfo
+    localStorage.setItem('userInfo', JSON.stringify(payload.userInfo))
     localStorage.setItem('avatar', payload.userInfo.avatar)
   },
   updateUserInfoParams (state, payload) {

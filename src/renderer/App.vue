@@ -1,11 +1,16 @@
 <template>
-  <div :class="{'c-app': true, 'is-web': IS_WEB}">
+  <div
+    :class="{'c-app': true, 'is-web': IS_WEB}"
+    v-loading="load.loading_count > 0"
+    element-loading-text="拼命加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.6)">
     <TitleBar></TitleBar>
     <router-view></router-view>
   </div>
 </template>
 
-<style>
+<style lang="less">
   @import '~purecss/build/pure.css';
   @import '~element-ui/lib/theme-chalk/index.css';
   @import 'https://at.alicdn.com/t/font_919985_yq7p63k0tcc.css';
@@ -75,8 +80,8 @@
     height: 100vh;
   }
 
-  .is-web {
-    min-width: 1135px;
+  .el-icon-loading {
+    font-size: 36px;
   }
 
   ::-webkit-scrollbar {
@@ -92,14 +97,29 @@
     background-color: #e2e2e2;
   }
 
-  .is-web .c-login-page {
-    border: 1px solid #ccc;
+  .is-web {
+    min-width: 1135px;
+    background-image: url(http://img4.imgtn.bdimg.com/it/u=489764336,400606574&fm=26&gp=0.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    .c-login-page {
+      margin: -300px 0 0 -150px !important;
+      box-shadow: 0 10px 30px 0 rgba(0, 0, 0, .1);
+      background-color: #fff;
+      .avatar {
+        border-top: 0 !important;
+      }
+    }
   }
 </style>
 
 <script>
+  import Vue from 'vue'
   import TitleBar from '@/components/TitleBar'
-  import { Message } from 'element-ui'
+  import { Message, Loading } from 'element-ui'
+
+  Vue.use(Loading.directive)
 
   export default {
     name: 'App',
@@ -112,7 +132,8 @@
         require('electron').webFrame.setZoomLevel(0)
       }
       return {
-        IS_WEB: process.env.IS_WEB
+        IS_WEB: process.env.IS_WEB,
+        load: window.e.load
       }
     },
     created () {

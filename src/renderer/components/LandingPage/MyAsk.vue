@@ -3,6 +3,7 @@
     <div class="back" @click="$router.back(-1)">返回列表</div>
     <div v-if="asks.length > 0">
       <div class="list-item" v-for="item in asks" v-bind:key="item._id" @click="$router.push('/ask/ask-detail/' + item._id)">
+        <img class="delete" @click.stop="del(item, index)" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABVUlEQVRYR+2WS0rEQBRFz12BK3AbLsCRI/HTYktriw2uyYEifvADfhEEh27INVx5UA0xdHdS6UE5SE0ySdU7ue/dWxGFlwrXpwfoFfjfCtheA1YlvXRxi+1d4EfS97z9CxWwvQM8AWNJdzkQtifAOTCQ9NYJIDbZHgOXwHFbCNsj4AY4kRTPuavVDFQghpKeFx1oewA8ApOm4nFOK4CKEhdJ0o9ZEKn4fWpZQDSu1gAJYghcA3uS/kDY3kzzEq1qVTxLgemn2A6IK2BL0lcC2wDegYNFAzdLjiwFKhDbQLgiXBIrbHqYW7yTAjWI2zAKEMP52djwGS90UiDJHipMLRY5MdfrS9uwfoDtegtegVEXiGwFig5hKl7GhikNywRR0Si2fQqcFbmMbO8DD8BR25uwkhPLX8e214GVLvZKWbHcD0mXZMvdk50DuQWa3u8BegWKK/ALI6ChIZ3ISgcAAAAASUVORK5CYII=">
         <img :src="'http://www.xuebabiji.club' + item.pic" v-show="item.pic">
         <div class="content" v-show="item.content">{{item.content}}</div>
         <div class="other">
@@ -13,7 +14,6 @@
           <span class="publish-time">{{item.createdAt | formatDate}}发布</span>
         </div>
       </div>
-      <div class="more" v-if="(this.asks_total / 20) > (this.asks.length / 20) && !show_loading" @click="more()">更多</div>
     </div>
     <div class="flot" @click="showAddPanel()" v-show="!adding">问</div>
     <div :class="{'bottom': true, 'show': adding, 'hide': !adding}">
@@ -65,6 +65,15 @@
       overflow: hidden;
       cursor: pointer;
       border: 1px solid #efefef;
+      .delete {
+        position: absolute;
+        top: 5px;
+        right: 17px;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+        background-color: red;
+      }
       &:active {
         background-color: #efefef;
       }
@@ -182,14 +191,13 @@
 </style>
 
 <script>
-  import { Message } from 'element-ui'
+  import { Message, MessageBox } from 'element-ui'
 
   export default {
     name: 'MyAsk',
     data () {
       return {
         asks: [],
-        asks_total: 0,
         content: '',
         pic: '',
         adding: false
@@ -216,7 +224,6 @@
         vm.$http.get('/api/common/getMyProblem').then(function (ret) {
           if (ret.data.ok === 0) {
             vm.asks = ret.data.data.items
-            vm.asks_total = ret.data.data.asks_total
           } else {
             Message({message: ret.data.msg, center: true})
           }
@@ -260,8 +267,6 @@
         }).then(function (ret) {
           vm.adding = false
 
-          vm.asks_total++
-
           if (vm.asks.length >= 20) {
             vm.asks.pop()
           }
@@ -285,6 +290,28 @@
             Message({message: ret.data.msg, center: true})
           })
         }
+      },
+      del (item, index) {
+        var vm = this
+
+        MessageBox.confirm('确定移除？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          vm.$http.post('/api/common/delMyProblem', {
+            _id: item._id
+          }).then(function (ret) {
+            if (ret.data.ok === 0) {
+              vm.asks.splice(index, 1)
+            } else {
+              Message({message: ret.data.msg, center: true})
+            }
+          }, function (ret) {
+            Message({message: ret.data.msg, center: true})
+          })
+        }).catch(() => {
+        })
       }
     }
   }

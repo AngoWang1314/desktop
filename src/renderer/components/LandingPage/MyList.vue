@@ -244,10 +244,10 @@
         const vm = this
 
         localStorage.removeItem('token')
-        if (!vm.IS_WEB) {
+        if (!process.env.IS_WEB) {
           require('electron').ipcRenderer.send('logout')
         }
-        this.$router.push('/')
+        vm.$router.push('/')
       }
     }
   }

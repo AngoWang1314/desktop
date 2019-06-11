@@ -4,55 +4,7 @@ import axios from 'axios'
 
 Vue.use(Router)
 
-// 挂载到vue和配置基础路径
-Vue.http = Vue.prototype.$http = axios
-axios.defaults.baseURL = 'http://www.xuebabiji.club'
-
-// http request 请求拦截器，有token值则配置上token值
-axios.interceptors.request.use(
-  config => {
-    // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加
-    var token = localStorage.getItem('token') || ''
-    if (token) {
-      if (config.url.indexOf('?') > -1) {
-        config.url += '&token=' + token
-      } else {
-        config.url += '?token=' + token
-      }
-    }
-    return config
-  },
-  err => {
-    // 返回请求的错误信息
-    return Promise.reject(err)
-  }
-)
-// http response 拦截器 ,拦截token过期状态，重新登录
-axios.interceptors.response.use(
-  response => {
-    switch (response.data.ok) {
-      case -3:
-        // 返回 -3 清除token信息并跳转到登录页面
-        localStorage.removeItem('token')
-
-        if (!process.env.IS_WEB) {
-          require('electron').ipcRenderer.send('logout')
-        }
-
-        Router.replace({
-          path: '/',
-          query: {redirect: Router.currentRoute.fullPath}
-        })
-    }
-    return response
-  },
-  error => {
-    // 返回接口的错误信息
-    return Promise.reject(error)
-  }
-)
-
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -210,3 +162,68 @@ export default new Router({
     }
   ]
 })
+
+/* 全局事件对象 */
+window.e = new Vue()
+
+/* loading显示隐藏 */
+window.e.load = {
+  loading_count: 0
+}
+
+// 挂载到vue和配置基础路径
+Vue.http = Vue.prototype.$http = axios
+axios.defaults.baseURL = 'http://www.xuebabiji.club'
+
+// http request 请求拦截器，有token值则配置上token值
+axios.interceptors.request.use(
+  config => {
+    // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加
+    var token = localStorage.getItem('token') || ''
+    if (token) {
+      if (config.url.indexOf('?') > -1) {
+        config.url += '&token=' + token
+      } else {
+        config.url += '?token=' + token
+      }
+    }
+    // 计算发出请求个数
+    window.e.load.loading_count++
+    return config
+  },
+  err => {
+    // 返回请求的错误信息
+    return Promise.reject(err)
+  }
+)
+// http response 拦截器 ,拦截token过期状态，重新登录
+axios.interceptors.response.use(
+  response => {
+    console.log(response, router)
+    switch (response.data.ok) {
+      case -3:
+        // 返回 -3 清除token信息并跳转到登录页面
+        localStorage.removeItem('token')
+
+        if (!process.env.IS_WEB) {
+          require('electron').ipcRenderer.send('logout')
+        }
+
+        router.replace({
+          path: '/',
+          query: {redirect: router.currentRoute.fullPath}
+        })
+    }
+    // 计算未返回请求个数
+    window.e.load.loading_count--
+    return response
+  },
+  error => {
+    // 计算未返回请求个数
+    window.e.load.loading_count--
+    // 返回接口的错误信息
+    return Promise.reject(error)
+  }
+)
+
+export default router
