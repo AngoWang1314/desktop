@@ -36,14 +36,13 @@ function createWindow () {
 
   // 网页指针
   webContents = mainWindow.webContents
+  mainWindow.is_fullscreen = false
 
   mainWindow.on('maximize', () => {
-    mainWindow.is_fullscreen = true
     webContents.send('toggle-window')
   })
 
   mainWindow.on('unmaximize', () => {
-    mainWindow.is_fullscreen = false
     webContents.send('toggle-window')
   })
 
@@ -63,7 +62,6 @@ function createWindow () {
       mainWindow.maximize()
     }
     mainWindow.is_fullscreen = !mainWindow.is_fullscreen
-    event.sender.send('toggle-window')
   })
 
   ipcMain.on('close-window', (event, arg) => {
