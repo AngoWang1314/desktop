@@ -58,6 +58,7 @@
       background-color: #fff;
     }
     .list-item {
+      position: relative;
       margin: 5px;
       padding: 5px;
       font-size: 15px;
@@ -67,8 +68,8 @@
       border: 1px solid #efefef;
       .delete {
         position: absolute;
-        top: 5px;
-        right: 17px;
+        top: 0px;
+        right: 0px;
         width: 32px;
         height: 32px;
         cursor: pointer;
