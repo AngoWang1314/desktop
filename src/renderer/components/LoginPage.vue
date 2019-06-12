@@ -71,9 +71,10 @@
     width: 300px;
     height: 440px;
     margin: -178px 0 0 -150px;
+    border: 1px solid rgba(0, 0, 0, .1);
     .avatar {
       padding: 30px 0;
-      border-top: 1px solid #409eff;
+      border-top: 0px solid #409eff;
       img {
         width: 100px;
         height: 100px;

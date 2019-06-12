@@ -49,10 +49,12 @@
         font-size: 15px;
         color: #ffffff;
         cursor: pointer;
-        border-top: 1px solid #3a98f9;
         border-bottom: 1px solid #3a98f9;
+        &:last-child {
+          border-bottom: 0px;
+        }
         &:hover {
-          border: 1px solid #097aef;
+          border-color: #097aef;
           background-color: #097aef;
         }
         i {
@@ -60,7 +62,7 @@
         }
       }
       .active {
-        border: 1px solid #097aef;
+        border-color: #097aef;
         background-color: #097aef;
       }
     }
@@ -68,7 +70,6 @@
       flex: 1;
       height: 100%;
       overflow: hidden;
-      border-top: 1px solid #3a98f9;
     }
   }
 </style>

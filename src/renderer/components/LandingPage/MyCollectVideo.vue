@@ -12,6 +12,9 @@
         </div>
       </div>
     </div>
+    <div class="tip" v-if="list.length === 0">
+      您该还没有收藏的视频哦！<span class="jump" @click="$router.push('/vdo')">立即观看</span>
+    </div>
     <div class="layer" v-if="is_playing">
     </div>
     <div class="iframe-container" v-if="is_playing">
@@ -79,6 +82,15 @@
           border: 1px solid #d8d8d8;
           border-top: 0;
         }
+      }
+    }
+    .tip {
+      text-align: center;
+      margin-top: 200px;
+      font-size: 18px;
+      .jump {
+        color:#007aff;
+        cursor: pointer;
       }
     }
     .layer {

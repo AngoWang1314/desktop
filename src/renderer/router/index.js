@@ -199,7 +199,6 @@ axios.interceptors.request.use(
 // http response 拦截器 ,拦截token过期状态，重新登录
 axios.interceptors.response.use(
   response => {
-    console.log(response, router)
     switch (response.data.ok) {
       case -3:
         // 返回 -3 清除token信息并跳转到登录页面

@@ -26,7 +26,7 @@ function createWindow () {
     frame: false,
     width: 300,
     height: 440,
-    resizable: false,
+    resizable: true,
     webPreferences: {plugins: true, allowDisplayingInsecureContent: true, allowRunningInsecureContent: true},
     center: true
   })
@@ -36,6 +36,16 @@ function createWindow () {
 
   // 网页指针
   webContents = mainWindow.webContents
+
+  mainWindow.on('maximize', () => {
+    mainWindow.is_fullscreen = true
+    webContents.send('toggle-window')
+  })
+
+  mainWindow.on('unmaximize', () => {
+    mainWindow.is_fullscreen = false
+    webContents.send('toggle-window')
+  })
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -89,9 +99,7 @@ function createWindow () {
   })
 
   ipcMain.on('logout', (event, arg) => {
-    mainWindow.setResizable(true)
     mainWindow.setSize(300, 440)
-    mainWindow.setResizable(false)
     mainWindow.center()
   })
 }
