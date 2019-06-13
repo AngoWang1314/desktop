@@ -1,6 +1,6 @@
 <template>
   <div class="c-title-bar" v-show="$route.name !== 'LoginPage' || !IS_WEB">
-    <div :class="{'app-name': true, 'right-border': $route.name !== 'LoginPage'}">{{ appName }}</div>
+    <div :class="{'app-name': true, 'border': $route.name !== 'LoginPage'}">{{ appName }}</div>
     <div class="operation" @dblclick="toggleWindow">
       <div class="ib minimize" @click.stop="minWindow" v-show="!IS_WEB">
         <i class="iconfont icon-zuixiaohua"></i>
@@ -18,7 +18,7 @@
 <style scoped lang="less">
   .c-title-bar {
     width: 100%;
-    height: 42px;
+    height: 43px;
     line-height: 42px;
     color: #ffffff;
     background-color: #409eff;
@@ -29,8 +29,9 @@
       text-align: center;
       -webkit-app-region: no-drag;
     }
-    .right-border {
+    .border {
       border-right: 1px solid #3a98f9;
+      border-bottom: 1px solid #3a98f9;
     }
     .operation {
       margin-left: 85px;

@@ -15,8 +15,16 @@ if (process.env.NODE_ENV !== 'development') {
 let mainWindow, webContents
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
 
-// 加载flash的dll
-app.commandLine.appendSwitch('ppapi-flash-path', process.env.NODE_ENV === 'development' ? app.getPath('pepperFlashSystemPlugin') : (process.arch === 'x64' ? `${__dirname}/../../../pepflashplayer64_28_0_0_126.dll` : `${__dirname}/../../../pepflashplayer32_32_0_0_192.dll`))
+// 加载flash
+if (process.env.NODE_ENV === 'development') {
+  app.commandLine.appendSwitch('ppapi-flash-path', app.getPath('pepperFlashSystemPlugin'))
+} else {
+  if (process.platform === 'win32') {
+    app.commandLine.appendSwitch('ppapi-flash-path', process.arch === 'x64' ? `${__dirname}/../../../pepflashplayer64_28_0_0_126.dll` : `${__dirname}/../../../pepflashplayer32_32_0_0_192.dll`)
+  } else if (process.platform === 'darwin') {
+    app.commandLine.appendSwitch('ppapi-flash-path', `${__dirname}/../../../PepperFlashPlayer.plugin`)
+  }
+}
 
 function createWindow () {
   // 新建窗口

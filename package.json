@@ -28,6 +28,9 @@
     }, {
       "from": "dll/pepflashplayer64_28_0_0_126.dll",
       "to": "dll/pepflashplayer64_28_0_0_126.dll"
+    }, {
+      "from": "dll/PepperFlashPlayer.plugin",
+      "to": "dll/PepperFlashPlayer.plugin"
     }],
     "nsis": {
       "oneClick": false,
