@@ -28,6 +28,7 @@
 
 <style scoped lang="less">
   .c-landing-page {
+    min-width: 1135px;
     height: calc(100% - 42px);
     min-height: 702px;
     overflow: auto;

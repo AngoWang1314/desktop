@@ -78,6 +78,10 @@
   .c-app {
     width: 100vw;
     height: 100vh;
+    background-image: url(http://file05.16sucai.com/2015/0615/0f9320e353671b9b02049dec80a7fde3.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
   }
 
   .el-icon-loading {
@@ -98,15 +102,9 @@
   }
 
   .is-web {
-    min-width: 1135px;
-    background-image: url(http://img4.imgtn.bdimg.com/it/u=489764336,400606574&fm=26&gp=0.jpg);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
     .c-login-page {
       margin: -300px 0 0 -150px !important;
       box-shadow: 0 10px 30px 0 rgba(0, 0, 0, .1);
-      background-color: #fff;
       .avatar {
         border-top: 0 !important;
       }

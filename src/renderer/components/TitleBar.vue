@@ -1,5 +1,5 @@
 <template>
-  <div class="c-title-bar" v-show="$route.name !== 'LoginPage' || !IS_WEB">
+  <div :class="{'c-title-bar': true, 'min-width': $route.name !== 'LoginPage'}" v-show="$route.name !== 'LoginPage' || !IS_WEB">
     <div :class="{'app-name': true, 'border': $route.name !== 'LoginPage'}">{{ appName }}</div>
     <div class="operation" @dblclick="toggleWindow">
       <div class="ib minimize" @click.stop="minWindow" v-show="!IS_WEB">
@@ -19,13 +19,15 @@
   .c-title-bar {
     width: 100%;
     height: 43px;
-    line-height: 42px;
+    line-height: 43px;
     color: #ffffff;
     background-color: #409eff;
     -webkit-app-region: drag;
+    overflow: hidden;
     .app-name {
       float: left;
       width: 85px;
+      height: 43px;
       text-align: center;
       -webkit-app-region: no-drag;
     }
@@ -39,8 +41,8 @@
       .minimize, .maximize-restore, .close, .logout {
         position: relative;
         z-index: 1000;
-        width: 42px;
-        height: 42px;
+        width: 43px;
+        height: 43px;
         text-align: center;
         cursor: pointer;
         -webkit-app-region: no-drag;
@@ -56,6 +58,9 @@
         }
       }
     }
+  }
+  .min-width {
+    min-width: 1135px;
   }
 </style>
 

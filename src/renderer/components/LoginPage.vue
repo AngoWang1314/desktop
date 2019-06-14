@@ -70,8 +70,9 @@
     left: 50%;
     width: 300px;
     height: 440px;
-    margin: -178px 0 0 -150px;
+    margin: -177px 0 0 -150px;
     border: 1px solid rgba(0, 0, 0, .1);
+    background-color: #fff;
     .avatar {
       padding: 30px 0;
       border-top: 0px solid #409eff;
