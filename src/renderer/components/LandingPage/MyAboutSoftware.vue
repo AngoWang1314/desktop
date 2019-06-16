@@ -1,7 +1,7 @@
 <template>
   <div class="c-my-about-software">
     <div class="back" @click="$router.back(-1)">返回列表</div>
-    <p class="title">学霸笔迹免责申明</p>
+    <p class="title">学霸笔迹免责声明</p>
     <p class="content">
       本网站所提供的信息，只供参考之用。
 

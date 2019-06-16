@@ -52,7 +52,7 @@
         </div>
       </div>
       <div class="item moreinfo" @click="jumpTo('/my/my-about-software')">
-        <div class="label">免责申明</div>
+        <div class="label">免责声明</div>
         <div class="value">
           <div style="text-align: right;">
             <span class="icon iconfont icon-right"></span>

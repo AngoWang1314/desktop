@@ -103,13 +103,14 @@
       background: transparent;
     }
     .iframe-container {
-      position: absolute;
+      position: fixed;
       top: 50%;
       left: 50%;
       z-index: 100001;
       width: 1120px;
       height: 480px;
-      margin: -240px 0 0 -610px;
+      margin: -240px 0 0 -560px;
+      border: 1px solid #ccc;
       iframe {
         width: 100%;
         height: 100%;
