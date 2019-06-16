@@ -20,9 +20,9 @@ if (process.env.NODE_ENV === 'development') {
   app.commandLine.appendSwitch('ppapi-flash-path', app.getPath('pepperFlashSystemPlugin'))
 } else {
   if (process.platform === 'win32') {
-    app.commandLine.appendSwitch('ppapi-flash-path', process.arch === 'x64' ? `${__dirname}/../../../pepflashplayer64_28_0_0_126.dll` : `${__dirname}/../../../pepflashplayer32_32_0_0_192.dll`)
+    app.commandLine.appendSwitch('ppapi-flash-path', process.arch === 'x64' ? `${__dirname}/../../../dll/pepflashplayer64_28_0_0_126.dll` : `${__dirname}/../../../dll/pepflashplayer32_32_0_0_192.dll`)
   } else if (process.platform === 'darwin') {
-    app.commandLine.appendSwitch('ppapi-flash-path', `${__dirname}/../../../PepperFlashPlayer.plugin`)
+    app.commandLine.appendSwitch('ppapi-flash-path', `${__dirname}/../../../dll/PepperFlashPlayer.plugin`)
   }
 }
 
