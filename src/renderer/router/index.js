@@ -173,7 +173,7 @@ window.e.load = {
 
 // 挂载到vue和配置基础路径
 Vue.http = Vue.prototype.$http = axios
-axios.defaults.baseURL = 'http://www.xuebabiji.club'
+axios.defaults.baseURL = process.env.IS_WEB ? location.protocol + '//www.xuebabiji.club' : 'http://www.xuebabiji.club'
 
 // http request 请求拦截器，有token值则配置上token值
 axios.interceptors.request.use(
