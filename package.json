@@ -65,6 +65,9 @@
       ]
     },
     "mac": {
+      "title": "学霸笔迹",
+      "asar": true,
+      "target": "dmg",
       "icon": "build/icons/icon.icns"
     },
     "win": {
