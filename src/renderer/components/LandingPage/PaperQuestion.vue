@@ -134,6 +134,7 @@
             semesterId: vm.params.semesterId,
             creditLineId: vm.params.creditLineId,
             typeId: vm.params.typeId,
+            areaId: vm.params.areaId,
             yearId: vm.params.yearId
           }
         }).then(function (ret) {

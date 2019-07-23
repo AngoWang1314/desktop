@@ -19,11 +19,26 @@
 </style>
 
 <script>
+  import { Message } from 'element-ui'
+
   export default {
     name: 'My',
     data () {
       return {
       }
+    },
+    created () {
+      const vm = this
+
+      vm.$http.get('/api/common/getUserInfo').then(function (ret) {
+        if (ret.data.ok === 0) {
+          vm.$store.commit('Login/updateUserInfo', {'userInfo': ret.data.data})
+        } else {
+          Message({message: ret.data.msg, center: true})
+        }
+      }, function (ret) {
+        Message({message: ret.data.msg, center: true})
+      })
     }
   }
 </script>

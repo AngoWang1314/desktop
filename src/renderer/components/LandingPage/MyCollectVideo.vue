@@ -135,7 +135,7 @@
     data () {
       return {
         list: [],
-        our_base_url: 'http://www.xuebabiji.club/player/desktop.html',
+        our_base_url: process.env.IS_WEB ? location.protocol + '//www.xuebabiji.club/player/desktop.html' : 'http://www.xuebabiji.club/player/desktop.html',
         iframe_src: '',
         is_playing: false
       }

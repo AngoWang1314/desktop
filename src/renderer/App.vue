@@ -125,6 +125,7 @@
       TitleBar
     },
     data () {
+      window.console.log(navigator.plugins)
       if (!process.env.IS_WEB) {
         require('electron').webFrame.setZoomFactor(1.0)
         require('electron').webFrame.setZoomLevel(0)

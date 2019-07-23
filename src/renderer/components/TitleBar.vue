@@ -57,6 +57,9 @@
           background-color: red;
         }
       }
+      .icon-iconfontguanji {
+        font-size: 20px;
+      }
     }
   }
   .min-width {
