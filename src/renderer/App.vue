@@ -125,7 +125,6 @@
       TitleBar
     },
     data () {
-      window.console.log(navigator.plugins)
       if (!process.env.IS_WEB) {
         require('electron').webFrame.setZoomFactor(1.0)
         require('electron').webFrame.setZoomLevel(0)
@@ -238,6 +237,7 @@
 
       if (!process.env.IS_WEB) {
         require('electron').ipcRenderer.on('message', (event, {message, data}) => {
+          alert(message + ':' + JSON.stringify(data))
           if (message === 'is-update-now') {
             confirm('发现新版本，立即更新？', function () {
               require('electron').ipcRenderer.send('update-now')

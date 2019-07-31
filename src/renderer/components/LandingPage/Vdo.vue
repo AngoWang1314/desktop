@@ -173,7 +173,7 @@
       height: 480px;
       margin: -240px 0 0 -560px;
       border: 1px solid #ccc;
-      iframe {
+      webview {
         width: 100%;
         height: 100%;
         border: 0px solid #ccc;

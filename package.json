@@ -66,7 +66,10 @@
     },
     "mac": {
       "asar": true,
-      "target": "dmg",
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "icon": "build/icons/icon.icns",
       "artifactName": "xbbj_setup.${ext}"
     },
@@ -79,7 +82,7 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "http://www.xuebabiji.club/"
+        "url": "http://www.xuebabiji.club/darwin/xbbj/x64/"
       }
     ]
   },

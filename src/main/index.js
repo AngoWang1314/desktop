@@ -16,15 +16,71 @@ let mainWindow, webContents
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
 
 // 加载flash
+console.log(process.cwd() + '/Resources/dll/PepperFlashPlayer.plugin')
 if (process.env.NODE_ENV === 'development') {
   app.commandLine.appendSwitch('ppapi-flash-path', app.getPath('pepperFlashSystemPlugin'))
 } else {
   if (process.platform === 'win32') {
     app.commandLine.appendSwitch('ppapi-flash-path', process.arch === 'x64' ? `${__dirname}/../../../dll/pepflashplayer64_28_0_0_126.dll` : `${__dirname}/../../../dll/pepflashplayer32_32_0_0_192.dll`)
   } else if (process.platform === 'darwin') {
-    app.commandLine.appendSwitch('ppapi-flash-path', `${__dirname}/../../../dll/PepperFlashPlayer.plugin`)
+    app.commandLine.appendSwitch('ppapi-flash-path', app.getAppPath().replace('app.asar', '') + 'dll/PepperFlashPlayer.plugin')
   }
 }
+
+ipcMain.on('min-window', (event, arg) => {
+  mainWindow.minimize()
+  event.sender.send('min-window')
+})
+
+ipcMain.on('toggle-window', (event, arg) => {
+  if (mainWindow.is_fullscreen) {
+    mainWindow.unmaximize()
+    mainWindow.is_fullscreen = false
+  } else {
+    mainWindow.maximize()
+    mainWindow.is_fullscreen = true
+  }
+})
+
+ipcMain.on('close-window', (event, arg) => {
+  if (mainWindow) {
+    mainWindow.destroy()
+  }
+})
+
+ipcMain.on('finish-login', (event, arg) => {
+  mainWindow.setSize(1390, 750)
+  mainWindow.center()
+  event.sender.send('finish-login')
+})
+
+ipcMain.on('open-window', (event, arg) => {
+  let child = new BrowserWindow({
+    title: '学霸笔迹',
+    parent: mainWindow,
+    modal: true,
+    show: false,
+    frame: false,
+    width: 1120,
+    height: 480,
+    resizable: false,
+    webPreferences: {plugins: true, allowDisplayingInsecureContent: true, allowRunningInsecureContent: true},
+    center: true
+  })
+  child.loadURL(arg)
+  child.once('ready-to-show', () => {
+    child.show()
+  })
+})
+
+ipcMain.on('open-office', (event, arg) => {
+  shell.openItem(path.join(__dirname, 'new.ppt'))
+})
+
+ipcMain.on('logout', (event, arg) => {
+  mainWindow.setSize(300, 440)
+  mainWindow.center()
+})
 
 function createWindow () {
   // 新建窗口
@@ -57,57 +113,6 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
-
-  ipcMain.on('min-window', (event, arg) => {
-    mainWindow.minimize()
-    event.sender.send('min-window')
-  })
-
-  ipcMain.on('toggle-window', (event, arg) => {
-    if (mainWindow.is_fullscreen) {
-      mainWindow.unmaximize()
-    } else {
-      mainWindow.maximize()
-    }
-    mainWindow.is_fullscreen = !mainWindow.is_fullscreen
-  })
-
-  ipcMain.on('close-window', (event, arg) => {
-    mainWindow.destroy()
-  })
-
-  ipcMain.on('finish-login', (event, arg) => {
-    mainWindow.setSize(1390, 750)
-    mainWindow.center()
-    event.sender.send('finish-login')
-  })
-
-  ipcMain.on('open-window', (event, arg) => {
-    let child = new BrowserWindow({
-      title: '学霸笔迹',
-      parent: mainWindow,
-      modal: true,
-      show: false,
-      frame: false,
-      width: 1120,
-      height: 480,
-      resizable: false,
-      webPreferences: {plugins: true, allowDisplayingInsecureContent: true, allowRunningInsecureContent: true}
-    })
-    child.loadURL(arg)
-    child.once('ready-to-show', () => {
-      child.show()
-    })
-  })
-
-  ipcMain.on('open-office', (event, arg) => {
-    shell.openItem(path.join(__dirname, 'new.ppt'))
-  })
-
-  ipcMain.on('logout', (event, arg) => {
-    mainWindow.setSize(300, 440)
-    mainWindow.center()
-  })
 }
 
 // 主进程主动发送消息给渲染进程
@@ -122,7 +127,7 @@ let checkForUpdates = () => {
   autoUpdater.setFeedURL(feedUrl)
 
   // 设版本和更新索引
-  autoUpdater.updateConfigPath = './resources/app-update.yml'
+  autoUpdater.updateConfigPath = app.getAppPath().replace('app.asar', '') + 'app-update.yml'
   autoUpdater.currentVersion = '0.0.1'
 
   // 更新出错触发事件
@@ -163,11 +168,11 @@ let checkForUpdates = () => {
 }
 
 app.on('ready', () => {
+  createWindow()
+
   if (process.env.NODE_ENV !== 'development') {
     checkForUpdates()
   }
-
-  createWindow()
 })
 
 app.on('activate', () => {

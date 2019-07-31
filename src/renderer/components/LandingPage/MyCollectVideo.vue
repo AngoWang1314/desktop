@@ -18,7 +18,7 @@
     <div class="layer" v-if="is_playing">
     </div>
     <div class="iframe-container" v-if="is_playing">
-      <iframe allowfullscreen="allowfullscreen" :src="iframe_src"></iframe>
+      <webview allowfullscreen="allowfullscreen" :src="iframe_src" plugins></webview>
       <img class="close" @click="stop" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABVUlEQVRYR+2WS0rEQBRFz12BK3AbLsCRI/HTYktriw2uyYEifvADfhEEh27INVx5UA0xdHdS6UE5SE0ySdU7ue/dWxGFlwrXpwfoFfjfCtheA1YlvXRxi+1d4EfS97z9CxWwvQM8AWNJdzkQtifAOTCQ9NYJIDbZHgOXwHFbCNsj4AY4kRTPuavVDFQghpKeFx1oewA8ApOm4nFOK4CKEhdJ0o9ZEKn4fWpZQDSu1gAJYghcA3uS/kDY3kzzEq1qVTxLgemn2A6IK2BL0lcC2wDegYNFAzdLjiwFKhDbQLgiXBIrbHqYW7yTAjWI2zAKEMP52djwGS90UiDJHipMLRY5MdfrS9uwfoDtegtegVEXiGwFig5hKl7GhikNywRR0Si2fQqcFbmMbO8DD8BR25uwkhPLX8e214GVLvZKWbHcD0mXZMvdk50DuQWa3u8BegWKK/ALI6ChIZ3ISgcAAAAASUVORK5CYII=">
     </div>
   </div>
@@ -111,7 +111,7 @@
       height: 480px;
       margin: -240px 0 0 -560px;
       border: 1px solid #ccc;
-      iframe {
+      webview {
         width: 100%;
         height: 100%;
         border: 0px solid #ccc;

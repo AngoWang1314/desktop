@@ -1,14 +1,15 @@
 <template>
   <div :class="{'c-title-bar': true, 'min-width': $route.name !== 'LoginPage'}" v-show="$route.name !== 'LoginPage' || !IS_WEB">
     <div :class="{'app-name': true, 'border': $route.name !== 'LoginPage'}">{{ appName }}</div>
-    <div class="operation" @dblclick="toggleWindow">
+    <div class="operation">
+      <div class="drag" @dblclick.stop="toggleWindow"></div>
       <div class="ib minimize" @click.stop="minWindow" v-show="!IS_WEB">
         <i class="iconfont icon-zuixiaohua"></i>
       </div><div class="ib maximize-restore" v-show="$route.name !== 'LoginPage' && !IS_WEB" @click.stop="toggleWindow">
         <i :class="{'iconfont': true, 'icon-zuidahua': !is_fullscreen, 'icon-zuidahua2': is_fullscreen}"></i>
       </div><div class="ib close" @click.stop="closeWindow" v-show="!IS_WEB">
         <i class="iconfont icon-close"></i>
-      </div><div title="退出登录" class="ib logout" @click="doLogout" v-show="IS_WEB">
+      </div><div title="退出登录" class="ib logout" @click.stop="doLogout" v-show="IS_WEB">
         <i class="iconfont icon-iconfontguanji"></i>
       </div>
     </div>
@@ -38,6 +39,11 @@
     .operation {
       margin-left: 85px;
       text-align: right;
+      display: flex;
+      flex-direction: row;
+      .drag {
+        flex: 1;
+      }
       .minimize, .maximize-restore, .close, .logout {
         position: relative;
         z-index: 1000;
