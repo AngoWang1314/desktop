@@ -6,7 +6,7 @@ import path from 'path'
 // import store from "../renderer/store"
 
 // 更新包的位置
-const feedUrl = `http://www.xuebabiji.club/${process.platform}/xbbj/${process.arch}`
+const feedUrl = `https://www.xuebabiji.club/${process.platform}/xbbj/${process.arch}`
 
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
@@ -128,7 +128,7 @@ let checkForUpdates = () => {
 
   // 设版本和更新索引
   autoUpdater.updateConfigPath = app.getAppPath().replace('app.asar', '') + 'app-update.yml'
-  autoUpdater.currentVersion = '0.0.1'
+  autoUpdater.currentVersion = '0.0.3'
 
   // 更新出错触发事件
   autoUpdater.on('error', function (message) {

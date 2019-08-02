@@ -131,7 +131,8 @@
       }
       return {
         IS_WEB: process.env.IS_WEB,
-        load: window.e.load
+        load: window.e.load,
+        count: 0
       }
     },
     created () {
@@ -236,8 +237,12 @@
       }
 
       if (!process.env.IS_WEB) {
+        const vm = this
         require('electron').ipcRenderer.on('message', (event, {message, data}) => {
-          alert(message + ':' + JSON.stringify(data))
+          if (vm.count < 15) {
+            vm.count++
+            alert(message + ':' + JSON.stringify(data))
+          }
           if (message === 'is-update-now') {
             confirm('发现新版本，立即更新？', function () {
               require('electron').ipcRenderer.send('update-now')
